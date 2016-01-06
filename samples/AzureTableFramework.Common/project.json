@@ -1,17 +1,12 @@
 {
   "version": "1.0.0-*",
-  "description": "AzureTableFramework.Core Class Library",
+  "description": "AzureTableFramework.Common Class Library",
   "authors": [ "yahug" ],
   "tags": [ "" ],
   "projectUrl": "",
   "licenseUrl": "",
   "frameworks": {
-    "net451": {
-    "dependencies": {
-      "System.Reflection": "4.1.0-beta-23516",
-      "System.Reflection.Extensions": "4.0.1-beta-23516"
-    }
-    },
+    "net451": { },
     "dotnet5.4": {
       "dependencies": {
         "Microsoft.CSharp": "4.0.1-beta-23516",
@@ -23,7 +18,6 @@
     }
   },
   "dependencies": {
-    "AutoMapper": "4.1.1",
-    "WindowsAzure.Storage": "6.2.2-preview"
+    "AzureTableFramework.Core": "1.0.0-*"
   }
 }
