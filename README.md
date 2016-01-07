@@ -1,8 +1,7 @@
 # AzureTableFramework 
 
-AzureTableFramework is an object mapper that enables .NET developers to work with Azure Table data using domain-specific objects. It eliminates the need for most of the data-access code that developers usually need to write 
-
-(...or what I wanted EF7 to do for Azure Tables - In all fairness, Azure Tables are different enough from SQL Tables that it deserves its own library from a SQL-based EF).
+AzureTableFramework is an object mapper that enables .NET developers to work with Azure Table data using domain-specific objects. It eliminates the need for most of the data-access code that developers usually need to write.
+_(...or what I wanted EF7 to do for Azure Tables - In all fairness, Azure Tables are different enough from SQL Tables that it deserves its own library from a SQL-based EF)._
 
 Written in .Net Core (compatible with the full framework), it utilizes the official WindowsAzure.Storage API > 6.2.2
 
@@ -58,27 +57,44 @@ Save
 ```
 ## Important Notes
 
-
-
-
-### Key Similarities to EF
-
-
+There are a few key differences in using this library than you are probably used to; 
+**If you don't read any other documentation, read this next section ...** 
 
 ### Key Differences
 
-Azure Tables require PartitionKeys to be defined!
+**Azure Tables require PartitionKeys to be defined!**
 (Think of it like a free index)
+If you don't decorate ONE (String) property with a [PartionKey] attribute; the table won't be created and the object can't be saved.
+I suggest using a foriegn key.
+Results are sorted by PartitionKey, then RowKey alphanumerically.  
 
-RowKeys are ClassNames + "ID"
-RowKeys are always GUIDS
+**Tables are Named after ClassNames**
+	If you change a class name, a new table will be created the next time you save the changes.
+
+**RowKeys are ClassNames + "ID"**
+**RowKeys are always GUIDS**
+
+**Tables are created auto-magically, there are no database create/update migration tasks**
+All you need are azure storage credentials.
+
+### Additional Differences
+
+**Unique**
+
+**Code-First Only!**
 
 
-## Why Azure Tables
+	
+### Key Similarities to EF
+
+POCO defined data access
+
+
+## Why Azure Tables?
 
 I LOVE AZURE TABLES!
 
-AzureTables can be dramatically less expensive and more reliable than almost ANY other database.
+For TCO, AzureTables can be better and more reliable than almost ANY other database.
 
 	 
 
