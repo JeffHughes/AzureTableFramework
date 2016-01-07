@@ -121,9 +121,9 @@ Instead of this:
 
 |PartitionKey|AuthorID|RowKey|BlogID|Timestamp|Url|
 |-----|------|------|------|------|------|
-|HughesJeff|<span style="color:red">HughesJeff</span>|Blog1|<span style="color:red">Blog1</span>|1 Jan 2016 2:30PM|Url1|
-|HughesJeff|<span style="color:red">HughesJeff</span>|Blog2|<span style="color:red">Blog2</span>|1 Jan 2016 4:30PM|Url2|
-|	|<span style="color:red">Duplicate</span>| |<span style="color:red">Duplicate</span>| | |
+|HughesJeff|**HughesJeff**|Blog1|**Blog1**|1 Jan 2016 2:30PM|Url1|
+|HughesJeff|**HughesJeff**|Blog2|**Blog2**|1 Jan 2016 4:30PM|Url2|
+|	|**Duplicate**| |**Duplicate**| | |
 
 
 The library handles the deduping and reconstruction, behind the scenes.
