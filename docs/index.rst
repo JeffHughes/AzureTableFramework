@@ -6,5 +6,5 @@ Azure Table Framework Documentation
 .. toctree::
     :titlesonly:
 
-    gettingstarted/index
-    modeling/index
+    GettingStarted/index
+    Modeling/index
