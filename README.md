@@ -2,10 +2,16 @@
 
 | Var	| Value |
 | --------- | ----------- |
-| Current Version	| Alpha V0.001 (created 5 Jan 2016) |
-| First Version	| Alpha V0.001 (created 5 Jan 2016) |
 | HomePage  | [Project Homepage](http://AzureTableFramework.com/ "Visit AzureTableFramework.com") |
 | Owner		| Jeff Hughes (me@jeffhughes.com) |
+| Documentation		| azuretableframework.rtfd.org  [![Documentation Status](https://readthedocs.org/projects/azuretableframework/badge/?version=latest)](http://azuretableframework.readthedocs.org/en/latest/?badge=latest)
+ |
+| Current Version	| Alpha V0.001 (created 5 Jan 2016) |
+| First Version	| Alpha V0.001 (created 5 Jan 2016) |
+| GitHub Repository	| https://github.com/JeffHughes/AzureTableFramework.git |
+
+ 
+
 
 
 POCO access for Azure Tables
@@ -14,7 +20,6 @@ POCO access for Azure Tables
 But, Azure Tables are significantly different enough from SQL Tables that it deserves its own library.
 
 
-[![Documentation Status](https://readthedocs.org/projects/azuretableframework/badge/?version=latest)](http://azuretableframework.readthedocs.org/en/latest/?badge=latest)
 
 ## Getting Started
 
