@@ -1,3 +1,5 @@
+This is very much a work in progress - don't judge me yet!
+
 # AzureTableFramework 
 
 AzureTableFramework is an object mapper that enables .NET developers to work with Azure Table data using domain-specific objects. It eliminates the need for most of the data-access code that developers usually need to write.
@@ -74,7 +76,7 @@ All you need are azure storage credentials.  Tables that don't exist, when you "
 Results will eventually be returned sorted by PartitionKey, then RowKey alphanumerically.  
 
 **Tables are named after ClassNames**  (public class Blog {} => "Blog" Table  )
-If you change a class name, a new table will be created the next time you save the changes and previous data will remain in the old table with the old class name.
+If you change a class name (_and please don't forget it's corresponding ID property name, too_), a new table will be created the next time you save the changes and previous data will remain in the old table with the old class name.
 
 **RowKeys are ClassNames + "ID"**  
 There must be a (string) property that matches the case-sensitive pattern  ClassName + "ID" (e.g. class named Blog, must have a (string) property of "BlogID").
@@ -91,7 +93,7 @@ RowKeys are GUIDs by default, if you don't otherwise populate the property, a ne
 
 
 **You won't be able to find the columns for Class + "ID" and whatevery property you decorated with [PartitionKey] in the storage table**
-	There's no reason to save the data twice.  So, in the table the ID property data is saved as the RowKey and the data in the [PartitionKey] property is removed.
+	There's no reason to save the data twice.  So, in the table, the ID property data is saved as the RowKey and the data in the property decorated by [PartitionKey]  is removed.
 	
 ```
     public class Blog : AzureTableEntity
