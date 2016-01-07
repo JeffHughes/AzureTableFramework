@@ -1,6 +1,7 @@
 # AzureTableFramework 
 
- 
+| Option	| Description |
+| --------- | ----------- |
 | Current Version	| Alpha V0.001 (created 5 Jan 2016) |
 | First Version	| Alpha V0.001 (created 5 Jan 2016) |
 | HomePage  | [Project Homepage](http://AzureTableFramework.com/ "Visit AzureTableFramework.com") |
