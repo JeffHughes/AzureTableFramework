@@ -1,6 +1,6 @@
 # AzureTableFramework 
 
-| Option	| Description |
+| Var	| Value |
 | --------- | ----------- |
 | Current Version	| Alpha V0.001 (created 5 Jan 2016) |
 | First Version	| Alpha V0.001 (created 5 Jan 2016) |
