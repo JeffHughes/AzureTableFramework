@@ -69,10 +69,11 @@ I suggest using a foriegn key.
 Results are sorted by PartitionKey, then RowKey alphanumerically.  
 
 **Tables are Named after ClassNames**
-	If you change a class name, a new table will be created the next time you save the changes.
+If you change a class name, a new table will be created the next time you save the changes and previous data will remain in the old table with the old class name.
 
-**RowKeys are ClassNames + "ID"**
-**RowKeys are always GUIDS**
+**RowKeys are ClassNames + "ID"**  
+There must be a (string) property that matches the case-sensitive pattern  ClassNames + "ID" (e.g. class named Blog, must have a (string) property of "BlogID").
+RowKeys are GUIDs by default, if you don't otherwise populate the property, a new guid will be created.
 
 **Tables are created auto-magically, there are no database create/update migration tasks**
 All you need are azure storage credentials.
