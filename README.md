@@ -1,12 +1,15 @@
 # AzureTableFramework 
 
-AzureTableFramework is an object mapper that enables .NET developers to work with Azure Table data using domain-specific objects. It eliminates the need for most of the data-access code that developers usually need to write (...or what I wanted EF7 to do - In all fairness, Azure Tables are significantly different enough from SQL Tables that it deserves its own library from EF).
+AzureTableFramework is an object mapper that enables .NET developers to work with Azure Table data using domain-specific objects. It eliminates the need for most of the data-access code that developers usually need to write 
+
+(...or what I wanted EF7 to do for Azure Tables - In all fairness, Azure Tables are different enough from SQL Tables that it deserves its own library from a SQL-based EF).
 
 Written in .Net Core (compatible with the full framework), it utilizes the official WindowsAzure.Storage API > 6.2.2
 
 
 ## Getting Started
 
+Define
 ```
   public class BloggingContext : AzureTablesContext
     {
@@ -20,7 +23,6 @@ Written in .Net Core (compatible with the full framework), it utilizes the offic
         public string AuthorID { get; set; }
         //RowKey
         public string BlogID { get; set; }
-        [Required]
         public string url { get; set; }
         public Dictionary<string, Post> Posts { get; set; }
     }
@@ -36,13 +38,17 @@ Written in .Net Core (compatible with the full framework), it utilizes the offic
     }
 ```
 
+Get
 ```
 	using (var DB = new BloggingContext())
         {
             var B2 = await DB.Blogs.GetAsync("10b6c97d-115a-4fa7-bdfc-737d2444a2ec");
             Debug.WriteLine("B.AuthorID  =  " + B2?.AuthorID);
         }
+```
 
+Save
+```
     using (var DB = new BloggingContext())
         {
             var BLOG = DB.Blogs.New();
@@ -50,7 +56,31 @@ Written in .Net Core (compatible with the full framework), it utilizes the offic
 	        await DB.SaveChangesAsync();
         }
 ```
- 
+## Important Notes
+
+
+
+
+### Key Similarities to EF
+
+
+
+### Key Differences
+
+Azure Tables require PartitionKeys to be defined!
+(Think of it like a free index)
+
+RowKeys are ClassNames + "ID"
+RowKeys are always GUIDS
+
+
+## Why Azure Tables
+
+I LOVE AZURE TABLES!
+
+AzureTables can be dramatically less expensive and more reliable than almost ANY other database.
+
+	 
 
 |   | [AzureTableFramework](http://AzureTableFramework.com/ "Visit AzureTableFramework.com")	 |
 | --------- | ----------- |
