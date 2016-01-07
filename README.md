@@ -96,7 +96,7 @@ New() adds a GUID automatically
 **You won't be able to find the columns for Class + "ID" and whatevery property you decorated with [PartitionKey] in the storage table**
 	There's no reason to save the data twice.  So, in the table the ID property data is saved as the RowKey and  
 	
-	```
+```
     public class Blog : AzureTableEntity
     {
         [PartionKey]
@@ -116,7 +116,7 @@ New() adds a GUID automatically
 
 
 |PartitionKey|AuthorID|RowKey|BlogID|Timestamp|Url|
-|-----|------|------|------|
+|-----|------|------|------|------|------|
 |HughesJeff|HughesJeff|Blog1|Blog1|1 Jan 2016 2:30PM|Url1|
 |HughesJeff|HughesJeff|Blog2|Blog2|1 Jan 2016 4:30PM|Url2|
 
