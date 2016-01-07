@@ -118,6 +118,8 @@ So, Tables will look like this:
 |HughesJeff|Blog2|1 Jan 2016 4:30PM|Url2|
 
 Instead of this:
+
+
 |PartitionKey|AuthorID|RowKey|BlogID|Timestamp|Url|
 |-----|------|------|------|------|------|
 |HughesJeff|HughesJeff|Blog1|Blog1|1 Jan 2016 2:30PM|Url1|
