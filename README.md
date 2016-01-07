@@ -1,6 +1,10 @@
-# AzureTableFramework (Alpha V0.001)
+# AzureTableFramework 
 
-[Project Homepage](http://AzureTableFramework.com/ "Visit AzureTableFramework!")
+ 
+| Current Version	| Alpha V0.001 (created 5 Jan 2016) |
+| First Version	| Alpha V0.001 (created 5 Jan 2016) |
+| HomePage  | [Project Homepage](http://AzureTableFramework.com/ "Visit AzureTableFramework.com") |
+| Owner		| Jeff Hughes (me@jeffhughes.com) |
 
 
 POCO access for Azure Tables
@@ -13,6 +17,8 @@ But, Azure Tables are significantly different enough from SQL Tables that it des
 
 ## Getting Started
 
+
+ 
 
 #### Created by Jeff Hughes 5 Jan 2016
 
