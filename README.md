@@ -62,6 +62,11 @@ There are a few key differences in using this library than you are probably used
 
 ### Key Differences
 
+**Tables are created auto-magically, there are no database create/update migration tasks**
+All you need are azure storage credentials.
+There are no Server-side relationships and
+If you want to keep
+
 **Azure Tables require PartitionKeys to be defined!**
 (Think of it like a free index)
 If you don't decorate ONE (String) property with a [PartionKey] attribute; the table won't be created and the object can't be saved.
@@ -75,17 +80,48 @@ If you change a class name, a new table will be created the next time you save t
 There must be a (string) property that matches the case-sensitive pattern  ClassNames + "ID" (e.g. class named Blog, must have a (string) property of "BlogID").
 RowKeys are GUIDs by default, if you don't otherwise populate the property, a new guid will be created.
 
-**Tables are created auto-magically, there are no database create/update migration tasks**
-All you need are azure storage credentials.
+**Classes must inherit : AzureTableEntity**
+RowKey, PartitionKey, and ETag come from the Official API : EntityTable.
+LastUpdated and a few other goodies come from this library : AzureTableEntity
 
 ### Additional Differences
 
-**Unique**
+
 
 **Code-First Only!**
 
+**AzureTableDictionary.Items stores a dictionary of items by ID**
+New() adds a GUID automatically
 
+**You won't be able to find the columns for Class + "ID" and whatevery property you decorated with [PartitionKey] in the storage table**
+	There's no reason to save the data twice.  So, in the table the ID property data is saved as the RowKey and  
 	
+	```
+    public class Blog : AzureTableEntity
+    {
+        [PartionKey]
+        public string AuthorID { get; set; }
+        //RowKey
+        public string BlogID { get; set; }
+        public string url { get; set; }
+        public Dictionary<string, Post> Posts { get; set; }
+    }   
+```
+
+**Blog Table**
+|PartitionKey|RowKey|Timestamp|Url|
+|-----|------|------|------|
+|HughesJeff|Blog1|1 Jan 2016 2:30PM|Url1|
+|HughesJeff|Blog2|1 Jan 2016 4:30PM|Url2|
+
+
+|PartitionKey|AuthorID|RowKey|BlogID|Timestamp|Url|
+|-----|------|------|------|
+|HughesJeff|HughesJeff|Blog1|Blog1|1 Jan 2016 2:30PM|Url1|
+|HughesJeff|HughesJeff|Blog2|Blog2|1 Jan 2016 4:30PM|Url2|
+
+
+
 ### Key Similarities to EF
 
 POCO defined data access
