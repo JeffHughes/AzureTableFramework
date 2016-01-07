@@ -34,10 +34,65 @@ namespace AzureTableFramework.Core
             return ((MemberExpression)ex.Body).Member.GetCustomAttributes(typeof(EncryptAttribute), false).Any();
         }
 
+        public static string GetPartitionKeyPropertyName(Type t)
+        {
+            foreach (var prop in t.GetProperties())
+                foreach (var atts in prop.GetCustomAttributes())
+                    if (atts.GetType() == typeof(PartionKeyAttribute))
+                        if (prop.PropertyType != typeof(string))
+                            throw new Exception(t.Name + " partitionkey attribute is on " + prop.Name +
+                                " a " + prop.PropertyType + ".  But, partition keys must be strings");
+                        else
+                            return prop.Name;
+
+            throw new Exception("PartitionKey property attribute not found for " + t.Name);
+        }
+
+        public static string GetPartitionKeyValue(Object obj)
+        {
+            var type = obj.GetType();
+
+            return GetPartitionKeyValue(GetPartitionKeyPropertyName(type), type);
+        }
+
+        public static string GetPartitionKeyValue(string PartitionKeyPropertyName, Object obj)
+        {
+            var type = obj.GetType();
+            var PK = "";
+
+            var PossiblyNullObject = Utils.GetVal(obj, PartitionKeyPropertyName);
+
+            if (PossiblyNullObject == null)
+            {
+                PK = DateTime.UtcNow.Year + "-" + DateTime.UtcNow.Month;
+                Utils.SetVal(obj, PartitionKeyPropertyName, PK);
+            }
+            else {
+                PK = PossiblyNullObject.ToString();
+            }
+
+            return PK;
+        }
+
         public static string GetRowKeyValue(Object obj)
         {
             var type = obj.GetType();
-            return type.GetProperty(GetRowKeyPropertyName(type)).GetValue(obj).ToString();
+            var RowKeyPropertyName = GetRowKeyPropertyName(type);
+            var RK = "";
+
+            var PossiblyNullObject = Utils.GetVal(obj, RowKeyPropertyName);
+
+            if (PossiblyNullObject == null)
+            {
+                RK = Guid.NewGuid().ToString();
+                Utils.SetVal(obj, RowKeyPropertyName, RK);
+            }
+            else
+            {
+                RK = PossiblyNullObject.ToString();
+            }
+
+            return RK;
         }
 
         public static string GetRowKeyPropertyName(Type t)
@@ -47,14 +102,29 @@ namespace AzureTableFramework.Core
 
         public static object GetVal(object obj, string propertyName)
         {
+            if (obj == null) return null;
+
+            if (!PropertyExists(obj, propertyName)) return null;
+
             return obj.GetType().GetProperty(propertyName).GetValue(obj);
         }
 
         public static object SetVal(object obj, string propertyName, object value)
         {
+            if (obj == null) throw new Exception(" object not instantiated on prop:" + propertyName + " val:" + value);
+            // if (!PropertyExists(obj, propertyName)) throw new Exception(" no such property: " + propertyName + " for " + obj.GetType().Name);
+
             var typedValue = Convert.ChangeType(value, obj.GetType().GetProperty(propertyName).PropertyType);
             obj.GetType().GetProperty(propertyName).SetValue(obj, typedValue);
             return obj;
+        }
+
+        private static bool PropertyExists(object obj, string propertyName)
+        {
+            foreach (var prop in obj.GetType().GetProperties())
+                if (prop.Name.Equals(propertyName)) { return true; }
+
+            return false;
         }
 
         public static PropertyInfo GetPropInfo<T1, TProperty>(Expression<Func<T1, TProperty>> propertyLambda)

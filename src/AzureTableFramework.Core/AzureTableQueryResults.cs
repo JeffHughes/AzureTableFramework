@@ -1,4 +1,6 @@
-﻿using Microsoft.WindowsAzure.Storage.Table;
+﻿using AutoMapper;
+using Microsoft.WindowsAzure.Storage.Table;
+using System;
 using System.Collections.Generic;
 
 namespace AzureTableFramework.Core
@@ -8,5 +10,28 @@ namespace AzureTableFramework.Core
         public List<T> Results { get; set; }
 
         public TableContinuationToken token { get; set; }
+
+        public List<DynamicTableEntity> DynamicTableEntities
+        {
+            set
+            {
+                Mapper.CreateMap<DynamicTableEntity, T>();
+
+                var PartitionKeyPropertyName = Utils.GetPartitionKeyPropertyName(typeof(T));
+                var RowKeyPropertyName = Utils.GetRowKeyPropertyName(typeof(T));
+
+                Results = new List<T>();
+                foreach (var item in value)
+                {
+                    var obj = Mapper.Map<DynamicTableEntity, T>(item);
+                    Utils.SetVal(obj, RowKeyPropertyName, Utils.GetVal(obj, "RowKey"));
+                    Utils.SetVal(obj, PartitionKeyPropertyName, Utils.GetVal(obj, "PartitionKey"));
+
+                    //TODO: Decryption
+
+                    Results.Add(obj);
+                }
+            }
+        }
     }
 }

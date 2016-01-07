@@ -2,7 +2,6 @@
 using Microsoft.WindowsAzure.Storage.Table;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -55,25 +54,37 @@ namespace AzureTableFramework.Core
             return false;
         }
 
-        public static async Task BatchOperation<T>(CloudTable table, List<T> list, bool DeleteAll)
+        public static async Task BatchCloudTableOperation<T>(CloudTable table, List<T> list, bool DeleteAll)
         {
+            if (!list.Any()) return;
+
+            var type = list.First().GetType();
+            var PartitionKeyPropertyName = Utils.GetPartitionKeyPropertyName(type);
+            var RowKeyPropertyName = Utils.GetRowKeyPropertyName(type);
+
             var PartitionSortedList = new SortedList<string, List<T>>();
 
             foreach (var obj in list)
             {
-                //TODO: uncomment for indexing
-                // await DeleteIndexesAsync(O2);
-                if (!DeleteAll) { } //upsert indexes
+                var PK = Utils.GetPartitionKeyValue(PartitionKeyPropertyName, obj);
 
-                Utils.SetVal(obj, "PartitionKey", "ABCD");
+                Utils.SetVal(obj, "PartitionKey", PK);
                 Utils.SetVal(obj, "RowKey", Utils.GetRowKeyValue(obj));
 
-                var PK = (string)Utils.GetVal(obj, "PartitionKey");
+                Utils.SetVal(obj, RowKeyPropertyName, null);
+                Utils.SetVal(obj, PartitionKeyPropertyName, null);
+
+                //if (!(bool)Utils.GetVal(obj, "IsSoftDeleted"))
+                //    Utils.SetVal(obj, "IsSoftDeleted", null);
+
+                //TODO: uncomment for indexing
+                // await DeleteIndexesAsync(O2);
+                //if (!DeleteAll) { } //upsert indexes
 
                 if (!PartitionSortedList.ContainsKey(PK))
                     PartitionSortedList.Add(PK, new List<T>());
 
-                PartitionSortedList[PK].Add(obj);
+                PartitionSortedList[PK].Add((T)obj);
             }
 
             foreach (var PKList in PartitionSortedList.Values)
@@ -95,6 +106,12 @@ namespace AzureTableFramework.Core
             }
 
             PartitionSortedList.Clear();
+
+            foreach (T obj in list)
+            {
+                Utils.SetVal(obj, RowKeyPropertyName, Utils.GetVal(obj, "RowKey"));
+                Utils.SetVal(obj, PartitionKeyPropertyName, Utils.GetVal(obj, "PartitionKey"));
+            }
         }
     }
 }
