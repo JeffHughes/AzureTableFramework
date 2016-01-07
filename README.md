@@ -108,18 +108,23 @@ New() adds a GUID automatically
     }   
 ```
 
+So, Tables will look like this:
 **Blog Table**
+
+
 |PartitionKey|RowKey|Timestamp|Url|
 |-----|------|------|------|
 |HughesJeff|Blog1|1 Jan 2016 2:30PM|Url1|
 |HughesJeff|Blog2|1 Jan 2016 4:30PM|Url2|
 
-
+Instead of this:
 |PartitionKey|AuthorID|RowKey|BlogID|Timestamp|Url|
 |-----|------|------|------|------|------|
 |HughesJeff|HughesJeff|Blog1|Blog1|1 Jan 2016 2:30PM|Url1|
 |HughesJeff|HughesJeff|Blog2|Blog2|1 Jan 2016 4:30PM|Url2|
 
+
+The library handles the deduping and reconstruction, behind the scenes.
 
 
 ### Key Similarities to EF
