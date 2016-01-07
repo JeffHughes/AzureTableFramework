@@ -52,10 +52,12 @@ Written in .Net Core (compatible with the full framework), it utilizes the offic
 ```
  
 
-| Website | [AzureTableFramework](http://AzureTableFramework.com/ "Visit AzureTableFramework.com")	 |
+|   | [AzureTableFramework](http://AzureTableFramework.com/ "Visit AzureTableFramework.com")	 |
 | --------- | ----------- |
+| Website | [http://AzureTableFramework.com](http://AzureTableFramework.com/ "Visit AzureTableFramework.com")	 |
 | Documentation		|  [http://azuretableframework.rtfd.org](http://azuretableframework.rtfd.org/ "Visit Read the Docs azuretableframework.rtfd.org")   [![Documentation Status](https://readthedocs.org/projects/azuretableframework/badge/?version=latest)](http://azuretableframework.readthedocs.org/en/latest/?badge=latest) |
-| Owner		| Jeff Hughes (me@jeffhughes.com) |
-| First Version	|  reated 5 Jan 2016  |
 | GitHub Repository	| https://github.com/JeffHughes/AzureTableFramework.git |
+| Owner		| Jeff Hughes (me@jeffhughes.com) |
+| First Version	|  created 5 Jan 2016  |
+
 
