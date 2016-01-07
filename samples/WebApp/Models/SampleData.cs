@@ -19,19 +19,18 @@ namespace WebApp.Models
         {
             using (var DB = new BloggingContext())
             {
-                //var BLOG = DB.Blogs.New();
-
-                //BLOG.AuthorID = "654564";
-
-                var B = await DB.Blogs.GetAsync("10b6c97d-115a-4fa7-bdfc-737d2444a2e");
-
-                Debug.WriteLine("B.AuthorID for 10b6c97d-115a-4fa7-bdfc-737d2444a2e =  " + B?.AuthorID);
-
                 var B2 = await DB.Blogs.GetAsync("10b6c97d-115a-4fa7-bdfc-737d2444a2ec");
 
                 Debug.WriteLine("B.AuthorID for 10b6c97d-115a-4fa7-bdfc-737d2444a2ec =  " + B2?.AuthorID);
+            }
 
-                // await DB.SaveChangesAsync();
+            using (var DB = new BloggingContext())
+            {
+                var BLOG = DB.Blogs.New();
+
+                BLOG.AuthorID = "654564";
+
+                await DB.SaveChangesAsync();
             }
         }
     }

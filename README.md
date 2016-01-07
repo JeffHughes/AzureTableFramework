@@ -4,5 +4,8 @@ POCO access for Azure Tables
 
 But, Azure Tables are significantly different enough from SQL Tables that it deserves its own library.
 
+
+[![Documentation Status](https://readthedocs.org/projects/azuretableframework/badge/?version=latest)](http://azuretableframework.readthedocs.org/en/latest/?badge=latest)
+
 ## Getting Started
 
