@@ -1,4 +1,5 @@
 ﻿using AzureTableFramework.Core;
+using Microsoft.WindowsAzure.Storage.Table;
 using Samples.Common;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace WebApp.Models
         {
             using (var DB = new BloggingContext())
             {
-                var B2 = await DB.Blogs.GetAsync("10b6c97d-115a-4fa7-bdfc-737d2444a2ec");
+                var B2 = await DB.Blogs.GetByIDAsync("10b6c97d-115a-4fa7-bdfc-737d2444a2ec");
 
                 Debug.WriteLine("B.AuthorID for 10b6c97d-115a-4fa7-bdfc-737d2444a2ec =  " + B2?.AuthorID);
             }
@@ -29,6 +30,9 @@ namespace WebApp.Models
                 var BLOG = DB.Blogs.New();
 
                 BLOG.AuthorID = "654564";
+
+                var tq = Utils.FilterString("BlogID", QueryComparisons.NotEqual.ToString(), "");
+                await DB.Blogs.QueryAsync(tq, null);
 
                 await DB.SaveChangesAsync();
             }

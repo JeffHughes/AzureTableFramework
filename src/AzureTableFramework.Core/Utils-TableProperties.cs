@@ -13,21 +13,21 @@ namespace AzureTableFramework.Core
             return new List<char> { '\\', '#', '/', '%', '?' }.Aggregate(key, (current, c) => current.Replace(c, '_'));
         }
 
-        /// <param name="ex">AzureUtils.IsPartitionKey(() => new Object().Property))</param>
+        /// <param name="ex">Utils.IsPartitionKey(() => new Object().Property))</param>
         /// <returns>boolean</returns>
         public static bool IsPartitionKey<T>(Expression<Func<T>> ex)
         {
             return ((MemberExpression)ex.Body).Member.GetCustomAttributes(typeof(PartionKeyAttribute), false).Any();
         }
 
-        ///// <param name="ex">AzureUtils.IsPartitionKey(() => new SObjectS().SPropertyS))</param>
+        ///// <param name="ex">Utils.IsPartitionKey(() => new SObjectS().SPropertyS))</param>
         ///// <returns>boolean</returns>
         //public static bool IsRowKey<T>(Expression<Func<T>> ex)
         //{
         //    return ((MemberExpression)ex.Body).Member.GetCustomAttributes(typeof(RowKeyAttribute), false).Any();
         //}
 
-        /// <param name="ex">AzureUtils.IsEncrypted(() => new SObjectS().SPropertyS))</param>
+        /// <param name="ex">Utils.IsEncrypted(() => new SObjectS().SPropertyS))</param>
         /// <returns>boolean</returns>
         public static bool IsEncrypted<T>(Expression<Func<T>> ex)
         {

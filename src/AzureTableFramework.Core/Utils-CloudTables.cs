@@ -1,8 +1,11 @@
 ﻿using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Table;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace AzureTableFramework.Core
@@ -39,8 +42,8 @@ namespace AzureTableFramework.Core
 
         public static async Task<bool> DeleteTableIfEmptyAsync(CloudTable table)
         {
-            var Q = Utils.Query((() => new TableEntity().PartitionKey), QueryComparisons.NotEqual, null);
-            var TQ = new TableQuery<TableEntity>() { FilterString = Q, TakeCount = 1 }.Take(1);
+            var filterString = FilterString((() => new TableEntity().PartitionKey), QueryComparisons.NotEqual, null);
+            var TQ = new TableQuery<TableEntity> { FilterString = filterString }.Take(1);
 
             var segment = await table.ExecuteQuerySegmentedAsync(TQ, null);
             if (segment == null || !segment.Results.Any())
@@ -59,23 +62,26 @@ namespace AzureTableFramework.Core
             if (!list.Any()) return;
 
             var type = list.First().GetType();
-            var PartitionKeyPropertyName = Utils.GetPartitionKeyPropertyName(type);
-            var RowKeyPropertyName = Utils.GetRowKeyPropertyName(type);
+            var PartitionKeyPropertyName = GetPartitionKeyPropertyName(type);
+            var RowKeyPropertyName = GetRowKeyPropertyName(type);
 
             var PartitionSortedList = new SortedList<string, List<T>>();
 
             foreach (var obj in list)
             {
-                var PK = Utils.GetPartitionKeyValue(PartitionKeyPropertyName, obj);
+                var PK = GetPartitionKeyValue(PartitionKeyPropertyName, obj);
 
-                Utils.SetVal(obj, "PartitionKey", PK);
-                Utils.SetVal(obj, "RowKey", Utils.GetRowKeyValue(obj));
+                SetVal(obj, "PartitionKey", PK);
+                SetVal(obj, "RowKey", GetRowKeyValue(obj));
 
-                Utils.SetVal(obj, RowKeyPropertyName, null);
-                Utils.SetVal(obj, PartitionKeyPropertyName, null);
+                SetVal(obj, RowKeyPropertyName, null);
+                SetVal(obj, PartitionKeyPropertyName, null);
 
-                //if (!(bool)Utils.GetVal(obj, "IsSoftDeleted"))
-                //    Utils.SetVal(obj, "IsSoftDeleted", null);
+                foreach (var x in typeof(T).GetProperties().Where(x => x.GetCustomAttributes(typeof(RequiredAttribute), false).Any()))
+                    if (x.GetValue(obj) == null) throw new Exception("Required field " + x.Name + " on " + typeof(T).Name + " with ID of " + GetRowKeyValue(obj) + " is Null or Empty");
+
+                //if (!(bool)GetVal(obj, "IsSoftDeleted"))
+                //    SetVal(obj, "IsSoftDeleted", null);
 
                 //TODO: uncomment for indexing
                 // await DeleteIndexesAsync(O2);
@@ -92,7 +98,7 @@ namespace AzureTableFramework.Core
                 var EditableList = PKList;
                 while (EditableList.Any())
                 {
-                    // var SW = new Stopwatch(); SW.Start();
+                    var SW = new Stopwatch(); SW.Start();
                     var batchOperation = new TableBatchOperation();
                     if (DeleteAll)
                         EditableList.Take(100).ToList().ForEach(o => batchOperation.Delete(o as TableEntity));
@@ -100,7 +106,7 @@ namespace AzureTableFramework.Core
                         EditableList.Take(100).ToList().ForEach(o => batchOperation.InsertOrReplace(o as TableEntity));
                     await table.ExecuteBatchAsync(batchOperation);
                     EditableList = EditableList.Skip(100).ToList();
-                    // AzureUtils.Trace(string.Format("Batch Operation {0} executed in {1}", batchOperation.Count, SW.Elapsed));
+                    Debug.WriteLine(string.Format("Batch Operation {0} executed in {1}", batchOperation.Count, SW.Elapsed));
                 }
                 EditableList.Clear();
             }
@@ -109,9 +115,15 @@ namespace AzureTableFramework.Core
 
             foreach (T obj in list)
             {
-                Utils.SetVal(obj, RowKeyPropertyName, Utils.GetVal(obj, "RowKey"));
-                Utils.SetVal(obj, PartitionKeyPropertyName, Utils.GetVal(obj, "PartitionKey"));
+                SetVal(obj, RowKeyPropertyName, GetVal(obj, "RowKey"));
+                SetVal(obj, PartitionKeyPropertyName, GetVal(obj, "PartitionKey"));
             }
+        }
+
+        public static CloudStorageAccount StorageAccount(string StorageAccountName, string StorageAccountKey)
+        {
+            var SC = new StorageCredentials(StorageAccountName, StorageAccountKey);
+            return new CloudStorageAccount(SC, true);
         }
     }
 }

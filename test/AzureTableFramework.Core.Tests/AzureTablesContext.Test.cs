@@ -2,9 +2,7 @@
 
 namespace AzureTableFramework.Core.Tests
 {
-
-
-
+    //Make sure required fields fail on savechanges
 
     [TestClass]
     public class AzureTablesContext

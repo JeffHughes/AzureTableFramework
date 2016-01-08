@@ -26,7 +26,7 @@ public class Blog : AzureTableEntity
     public string AuthorID { get; set; }
     //RowKey
     public string BlogID { get; set; }
-    public string url { get; set; }
+    public string Url { get; set; }
     public Dictionary<string, Post> Posts { get; set; }
 }
 
@@ -68,7 +68,7 @@ There are a few key differences in using this library than you are probably used
 ### Key Differences
 
 **Tables are created auto-magically, there are no database create/update migration tasks**
-All you need are azure storage credentials.  When "SaveChanges" is called, taables that don't exist will be created.
+All you need are azure storage credentials.  When "SaveChanges" is called, tables that don't exist will be created.
 
 **Tables are named after Classes**  (public class Blog {} => "Blog" Table  )
 If you change a class name (_and please don't forget it's corresponding ID property name, too_), a new table will be created the next time "SaveChanges" is called and previous data will remain in the old table with the old class name.  There is no migration.
@@ -77,13 +77,23 @@ If you change a class name (_and please don't forget it's corresponding ID prope
 There must be a (string) property that matches the case-sensitive pattern  Class Name + "ID" (e.g. class named Blog, must have a (string) property of "BlogID").
 RowKeys are GUIDs by default, if you don't otherwise populate the property, a new guid will be created before saving.
 
-**Classes must inherit : AzureTableEntity**
+```
+public class Blog : AzureTableEntity
+{
+    ...
+    //RowKey
+    public string BlogID { get; set; }
+    ...
+}
+```
+
+**Storage Classes must inherit : AzureTableEntity**
 - RowKey, PartitionKey, and ETag come from the Official API : EntityTable.
 - LastUpdated and a few other goodies come from this library : AzureTableEntity (which inherits EntityTable).
 
 **Azure Tables require PartitionKeys to be defined!**
 (_Think of it as less of a burden and more like a free index_)
-**If you don't decorate one (String) property in each class with a [PartionKey] attribute; an error will be thrown.** I suggest using a foriegn key propery.
+**If you don't decorate one (string) property in each class with a [PartionKey] attribute; an error will be thrown.** I suggest using a foriegn key propery and situating it above the ID property.
 Results will eventually be returned sorted by PartitionKey, then RowKey alphanumerically.  
 
 ### Additional Differences
@@ -110,19 +120,19 @@ Results will eventually be returned sorted by PartitionKey, then RowKey alphanum
 So, **Blog Table** will look like this:
 
 
-|PartitionKey|RowKey|Timestamp|Url|
-|-----|------|------|------|
-|HughesJeff|Blog1|1 Jan 2016 2:30PM|Url1|
-|HughesJeff|Blog2|1 Jan 2016 4:30PM|Url2|
+|PartitionKey|RowKey|Timestamp		  |Url |
+|------------|------|-----------------|----|
+|HughesJeff  |Blog1 |1 Jan 2016 2:30PM|Url1|
+|HughesJeff  |Blog2 |1 Jan 2016 4:30PM|Url2|
 
 instead of this:
 
 
-|PartitionKey|AuthorID|RowKey|BlogID|Timestamp|Url|
-|-----|------|------|------|------|------|
-|HughesJeff|**HughesJeff**|Blog1|**Blog1**|1 Jan 2016 2:30PM|Url1|
-|HughesJeff|**HughesJeff**|Blog2|**Blog2**|1 Jan 2016 4:30PM|Url2|
-|	|:small_red_triangle: **Duplicate** :small_red_triangle: | :small_red_triangle: **Duplicate** :small_red_triangle:| | |
+|PartitionKey	|	AuthorID	|	RowKey		|	BlogID		|	Timestamp		|	Url			|
+|---------------|---------------|---------------|---------------|-------------------|---------------|
+|HughesJeff		|**HughesJeff**	|Blog1			|**Blog1**		|1 Jan 2016 2:30PM	|Url1			|
+|HughesJeff		|**HughesJeff**	|Blog2			|**Blog2**		|1 Jan 2016 4:30PM	|Url2			|
+||:small_red_triangle: **Duplicate** :small_red_triangle: || :small_red_triangle: **Duplicate** :small_red_triangle:|||
 
 
 The library handles the deduping and reconstruction, behind the scenes.
