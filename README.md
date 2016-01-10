@@ -9,11 +9,11 @@ Written in .Net Core (compatible with the full framework), it utilizes the offic
 
 
 ## Features
-+Indexing
-+Azure Search
-+Encryption
-+Required Fields
-+Parent/Child Relationships
+- Indexing
+- Azure Search
+- Encryption
+- Required Fields
+- Parent/Child Relationships
 
 ## Getting Started
 
