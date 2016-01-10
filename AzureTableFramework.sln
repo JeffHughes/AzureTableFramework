@@ -55,6 +55,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "full-dotnet", "full-dotnet"
 		docs\gettingstarted\full-dotnet\index.rst = docs\gettingstarted\full-dotnet\index.rst
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Indexing", "Indexing", "{95F9BDB7-B7EA-4071-A0FD-33C4DDB89EDE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Relationships", "Relationships", "{F9A67AC5-A532-487E-8DB7-CA03359706C7}"
+	ProjectSection(SolutionItems) = preProject
+		docs\relationships\index.rst = docs\relationships\index.rst
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Indexing", "Indexing", "{08068159-DC42-4091-81B1-B20EE2940BF7}"
+	ProjectSection(SolutionItems) = preProject
+		docs\indexing\index.rst = docs\indexing\index.rst
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AzureSearch", "AzureSearch", "{EB6CA5DF-6E41-4FB4-A6FD-EF7AACE96704}"
+	ProjectSection(SolutionItems) = preProject
+		docs\azuresearch\index.rst = docs\azuresearch\index.rst
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -176,5 +193,8 @@ Global
 		{DB1B781D-F060-435F-AD2D-D52D9E1635F0} = {5CFA3354-F374-4E75-84A0-034B3FE43AD0}
 		{6E4B2645-D87C-4947-BF74-FB14917B613F} = {4153EAAD-F36A-4DB7-B5B8-1854EDD84C4D}
 		{9F4CDC9B-C5B0-40DC-A0E7-4184FF3F3F4B} = {4153EAAD-F36A-4DB7-B5B8-1854EDD84C4D}
+		{F9A67AC5-A532-487E-8DB7-CA03359706C7} = {5CFA3354-F374-4E75-84A0-034B3FE43AD0}
+		{08068159-DC42-4091-81B1-B20EE2940BF7} = {5CFA3354-F374-4E75-84A0-034B3FE43AD0}
+		{EB6CA5DF-6E41-4FB4-A6FD-EF7AACE96704} = {5CFA3354-F374-4E75-84A0-034B3FE43AD0}
 	EndGlobalSection
 EndGlobal

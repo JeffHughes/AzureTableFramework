@@ -9,17 +9,17 @@ Written in .Net Core (compatible with the full framework), it utilizes the offic
 
 
 ## Features
-- Indexing
-- Azure Search
+- Indexing / Azure Search Integration
+- Parent/Child Relationships
+- Backups
 - Encryption
 - Required Fields
-- Parent/Child Relationships
 
 ## Getting Started
 
 Download the nugetpackage (coming soon), define your classes and call them in context (in a familiar EF-like way).
 
-Define
+Modeling [http://AzureTableFramework.com](http://AzureTableFramework.com/ "Visit AzureTableFramework.com")	
 ```
 public class BloggingContext : AzureTablesContext
 {
@@ -48,15 +48,6 @@ public class Post : AzureTableEntity
 }
 ```
 
-Get
-```
-using (var DB = new BloggingContext())
-{
-    var B = await DB.Blogs.GetAsync("Blog1");
-    Debug.WriteLine("B.Url  =  " + B?.Url);
-}
-```
-
 Save
 ```
 using (var DB = new BloggingContext())
@@ -66,6 +57,16 @@ using (var DB = new BloggingContext())
 	await DB.SaveChangesAsync();
 }
 ```
+
+Get
+```
+using (var DB = new BloggingContext())
+{
+    var B = await DB.Blogs.GetAsync("Blog1");
+    Debug.WriteLine("B.Url  =  " + B?.Url);
+}
+```
+
 ## Important Notes
 
 There are a few key differences in using this library than you are probably used to; 
@@ -165,16 +166,15 @@ POCO defined data access
 
 I LOVE AZURE TABLES!
 
-For TCO, AzureTables can be better and more reliable than almost ANY other database.
+For TCO (for most data needs), AzureTables beats every other database.
 
 	 
 
-|   | [AzureTableFramework](http://AzureTableFramework.com/ "Visit AzureTableFramework.com")	 |
-| ---------: | ----------- |
-| Website | [http://AzureTableFramework.com](http://AzureTableFramework.com/ "Visit AzureTableFramework.com")	 |
-| Documentation		|  [http://azuretableframework.rtfd.org](http://azuretableframework.rtfd.org/ "Visit Read the Docs azuretableframework.rtfd.org")   [![Documentation Status](https://readthedocs.org/projects/azuretableframework/badge/?version=latest)](http://azuretableframework.readthedocs.org/en/latest/?badge=latest) |
-| GitHub Repository	| https://github.com/JeffHughes/AzureTableFramework.git |
-| Owner		| Jeff Hughes (me@jeffhughes.com) |
-| First Version	|  created 5 Jan 2016  |
-
+|							| [AzureTableFramework](http://AzureTableFramework.com/ "Visit AzureTableFramework.com")									|
+| ------------------------: | ------------------------------------------------------------------------------------------------------------------------- |
+| Website					| [http://AzureTableFramework.com](http://AzureTableFramework.com/ "Visit AzureTableFramework.com")							|
+| Documentation				|  [http://azuretableframework.rtfd.org](http://azuretableframework.rtfd.org/ "Visit Read the Docs azuretableframework.rtfd.org")   [![Documentation Status](https://readthedocs.org/projects/azuretableframework/badge/?version=latest)](http://azuretableframework.readthedocs.org/en/latest/?badge=latest)     |
+| GitHub Repository			| https://github.com/JeffHughes/AzureTableFramework.git																		|
+| Owner						| Jeff Hughes (me@jeffhughes.com)																							|
+| First Version				|  created 5 Jan 2016																										|
 

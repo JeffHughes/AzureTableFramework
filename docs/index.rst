@@ -6,5 +6,9 @@ Azure Table Framework Documentation
 
     GettingStarted/index
     Modeling/index
+	Indexing/index
+	AzureSearch/index
+	Relationships/index
+
 
 
