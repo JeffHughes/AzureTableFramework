@@ -24,8 +24,12 @@ namespace AzureTableFramework.Core
                 foreach (var item in value)
                 {
                     var obj = Mapper.Map<DynamicTableEntity, T>(item);
-                    Utils.SetVal(obj, RowKeyPropertyName, Utils.GetVal(obj, "RowKey"));
-                    Utils.SetVal(obj, PartitionKeyPropertyName, Utils.GetVal(obj, "PartitionKey"));
+
+                    if (!(Utils.GetVal(obj, RowKeyPropertyName) == null))
+                        Utils.SetVal(obj, RowKeyPropertyName, Utils.GetVal(obj, "RowKey"));
+
+                    if (!(Utils.GetVal(obj, PartitionKeyPropertyName) == null))
+                        Utils.SetVal(obj, PartitionKeyPropertyName, Utils.GetVal(obj, "PartitionKey"));
 
                     //TODO: Decryption
 

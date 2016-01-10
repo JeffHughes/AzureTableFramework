@@ -8,11 +8,6 @@ namespace AzureTableFramework.Core
 {
     public static partial class Utils
     {
-        public static string MakeAzureSafe(this string key)
-        {
-            return new List<char> { '\\', '#', '/', '%', '?' }.Aggregate(key, (current, c) => current.Replace(c, '_'));
-        }
-
         /// <param name="ex">Utils.IsPartitionKey(() => new Object().Property))</param>
         /// <returns>boolean</returns>
         public static bool IsPartitionKey<T>(Expression<Func<T>> ex)
@@ -177,6 +172,17 @@ namespace AzureTableFramework.Core
                 obj is Single) return true;
 
             return false;
+        }
+
+        public static string TicksFromMax(DateTime DTUTC)
+        {
+            return (long.MaxValue - DTUTC.Ticks).ToString();
+        }
+
+        public static DateTime UTCDateTimeFromTicksFromMax(string TicksFromMax)
+        {
+            var TicksFromMaxLong = long.MaxValue - Convert.ToInt64(TicksFromMax);
+            return new DateTime(TicksFromMaxLong);
         }
     }
 }

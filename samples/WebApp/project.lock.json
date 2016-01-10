@@ -24,10 +24,16 @@
         "framework": ".NETFramework,Version=v4.5.1",
         "dependencies": {
           "AutoMapper": "4.1.1",
+          "System.Collections.Immutable": "1.1.37",
+          "System.Linq.Parallel": "4.0.1-beta-23516",
+          "System.Linq.Queryable": "4.0.1-beta-23516",
           "System.Reflection": "4.1.0-beta-23516",
           "System.Reflection.Extensions": "4.0.1-beta-23516",
           "WindowsAzure.Storage": "6.2.2-preview"
-        }
+        },
+        "frameworkAssemblies": [
+          "System.Runtime"
+        ]
       },
       "EntityFramework.Commands/7.0.0-rc1-final": {
         "type": "package",
@@ -2089,6 +2095,24 @@
           "lib/net45/_._": {}
         }
       },
+      "System.Linq.Parallel/4.0.1-beta-23516": {
+        "type": "package",
+        "compile": {
+          "ref/net45/_._": {}
+        },
+        "runtime": {
+          "lib/net45/_._": {}
+        }
+      },
+      "System.Linq.Queryable/4.0.1-beta-23516": {
+        "type": "package",
+        "compile": {
+          "ref/net45/_._": {}
+        },
+        "runtime": {
+          "lib/net45/_._": {}
+        }
+      },
       "System.Numerics.Vectors/4.1.1-beta-23516": {
         "type": "package",
         "compile": {
@@ -2320,7 +2344,10 @@
           "AutoMapper": "4.1.1",
           "Microsoft.CSharp": "4.0.1-beta-23516",
           "System.Collections": "4.0.11-beta-23516",
+          "System.Collections.Immutable": "1.1.37",
           "System.Linq": "4.0.1-beta-23516",
+          "System.Linq.Parallel": "4.0.1-beta-23516",
+          "System.Linq.Queryable": "4.0.1-beta-23516",
           "System.Runtime": "4.0.21-beta-23516",
           "System.Threading": "4.0.11-beta-23516",
           "WindowsAzure.Storage": "6.2.2-preview"
@@ -4537,6 +4564,27 @@
           "ref/dotnet5.4/System.Linq.Expressions.dll": {}
         }
       },
+      "System.Linq.Parallel/4.0.1-beta-23516": {
+        "type": "package",
+        "dependencies": {
+          "System.Collections": "4.0.10",
+          "System.Collections.Concurrent": "4.0.10",
+          "System.Diagnostics.Debug": "4.0.10",
+          "System.Diagnostics.Tracing": "4.0.20",
+          "System.Linq": "4.0.0",
+          "System.Resources.ResourceManager": "4.0.0",
+          "System.Runtime": "4.0.20",
+          "System.Runtime.Extensions": "4.0.10",
+          "System.Threading": "4.0.10",
+          "System.Threading.Tasks": "4.0.10"
+        },
+        "compile": {
+          "ref/dotnet5.2/System.Linq.Parallel.dll": {}
+        },
+        "runtime": {
+          "lib/dotnet5.4/System.Linq.Parallel.dll": {}
+        }
+      },
       "System.Linq.Queryable/4.0.1-beta-23516": {
         "type": "package",
         "dependencies": {
@@ -5349,10 +5397,16 @@
         "framework": ".NETFramework,Version=v4.5.1",
         "dependencies": {
           "AutoMapper": "4.1.1",
+          "System.Collections.Immutable": "1.1.37",
+          "System.Linq.Parallel": "4.0.1-beta-23516",
+          "System.Linq.Queryable": "4.0.1-beta-23516",
           "System.Reflection": "4.1.0-beta-23516",
           "System.Reflection.Extensions": "4.0.1-beta-23516",
           "WindowsAzure.Storage": "6.2.2-preview"
-        }
+        },
+        "frameworkAssemblies": [
+          "System.Runtime"
+        ]
       },
       "EntityFramework.Commands/7.0.0-rc1-final": {
         "type": "package",
@@ -7417,6 +7471,24 @@
           "lib/net45/_._": {}
         }
       },
+      "System.Linq.Parallel/4.0.1-beta-23516": {
+        "type": "package",
+        "compile": {
+          "ref/net45/_._": {}
+        },
+        "runtime": {
+          "lib/net45/_._": {}
+        }
+      },
+      "System.Linq.Queryable/4.0.1-beta-23516": {
+        "type": "package",
+        "compile": {
+          "ref/net45/_._": {}
+        },
+        "runtime": {
+          "lib/net45/_._": {}
+        }
+      },
       "System.Numerics.Vectors/4.1.1-beta-23516": {
         "type": "package",
         "compile": {
@@ -7622,10 +7694,16 @@
         "framework": ".NETFramework,Version=v4.5.1",
         "dependencies": {
           "AutoMapper": "4.1.1",
+          "System.Collections.Immutable": "1.1.37",
+          "System.Linq.Parallel": "4.0.1-beta-23516",
+          "System.Linq.Queryable": "4.0.1-beta-23516",
           "System.Reflection": "4.1.0-beta-23516",
           "System.Reflection.Extensions": "4.0.1-beta-23516",
           "WindowsAzure.Storage": "6.2.2-preview"
-        }
+        },
+        "frameworkAssemblies": [
+          "System.Runtime"
+        ]
       },
       "EntityFramework.Commands/7.0.0-rc1-final": {
         "type": "package",
@@ -9690,6 +9768,24 @@
           "lib/net45/_._": {}
         }
       },
+      "System.Linq.Parallel/4.0.1-beta-23516": {
+        "type": "package",
+        "compile": {
+          "ref/net45/_._": {}
+        },
+        "runtime": {
+          "lib/net45/_._": {}
+        }
+      },
+      "System.Linq.Queryable/4.0.1-beta-23516": {
+        "type": "package",
+        "compile": {
+          "ref/net45/_._": {}
+        },
+        "runtime": {
+          "lib/net45/_._": {}
+        }
+      },
       "System.Numerics.Vectors/4.1.1-beta-23516": {
         "type": "package",
         "compile": {
@@ -9921,7 +10017,10 @@
           "AutoMapper": "4.1.1",
           "Microsoft.CSharp": "4.0.1-beta-23516",
           "System.Collections": "4.0.11-beta-23516",
+          "System.Collections.Immutable": "1.1.37",
           "System.Linq": "4.0.1-beta-23516",
+          "System.Linq.Parallel": "4.0.1-beta-23516",
+          "System.Linq.Queryable": "4.0.1-beta-23516",
           "System.Runtime": "4.0.21-beta-23516",
           "System.Threading": "4.0.11-beta-23516",
           "WindowsAzure.Storage": "6.2.2-preview"
@@ -12523,6 +12622,27 @@
           "ref/dotnet5.4/System.Linq.Expressions.dll": {}
         }
       },
+      "System.Linq.Parallel/4.0.1-beta-23516": {
+        "type": "package",
+        "dependencies": {
+          "System.Collections": "4.0.10",
+          "System.Collections.Concurrent": "4.0.10",
+          "System.Diagnostics.Debug": "4.0.10",
+          "System.Diagnostics.Tracing": "4.0.20",
+          "System.Linq": "4.0.0",
+          "System.Resources.ResourceManager": "4.0.0",
+          "System.Runtime": "4.0.20",
+          "System.Runtime.Extensions": "4.0.10",
+          "System.Threading": "4.0.10",
+          "System.Threading.Tasks": "4.0.10"
+        },
+        "compile": {
+          "ref/dotnet5.2/System.Linq.Parallel.dll": {}
+        },
+        "runtime": {
+          "lib/dotnet5.4/System.Linq.Parallel.dll": {}
+        }
+      },
       "System.Linq.Queryable/4.0.1-beta-23516": {
         "type": "package",
         "dependencies": {
@@ -13461,7 +13581,10 @@
           "AutoMapper": "4.1.1",
           "Microsoft.CSharp": "4.0.1-beta-23516",
           "System.Collections": "4.0.11-beta-23516",
+          "System.Collections.Immutable": "1.1.37",
           "System.Linq": "4.0.1-beta-23516",
+          "System.Linq.Parallel": "4.0.1-beta-23516",
+          "System.Linq.Queryable": "4.0.1-beta-23516",
           "System.Runtime": "4.0.21-beta-23516",
           "System.Threading": "4.0.11-beta-23516",
           "WindowsAzure.Storage": "6.2.2-preview"
@@ -16061,6 +16184,27 @@
         },
         "compile": {
           "ref/dotnet5.4/System.Linq.Expressions.dll": {}
+        }
+      },
+      "System.Linq.Parallel/4.0.1-beta-23516": {
+        "type": "package",
+        "dependencies": {
+          "System.Collections": "4.0.10",
+          "System.Collections.Concurrent": "4.0.10",
+          "System.Diagnostics.Debug": "4.0.10",
+          "System.Diagnostics.Tracing": "4.0.20",
+          "System.Linq": "4.0.0",
+          "System.Resources.ResourceManager": "4.0.0",
+          "System.Runtime": "4.0.20",
+          "System.Runtime.Extensions": "4.0.10",
+          "System.Threading": "4.0.10",
+          "System.Threading.Tasks": "4.0.10"
+        },
+        "compile": {
+          "ref/dotnet5.2/System.Linq.Parallel.dll": {}
+        },
+        "runtime": {
+          "lib/dotnet5.4/System.Linq.Parallel.dll": {}
         }
       },
       "System.Linq.Queryable/4.0.1-beta-23516": {
@@ -20638,6 +20782,46 @@
         "System.Linq.Expressions.4.0.11-beta-23516.nupkg",
         "System.Linq.Expressions.4.0.11-beta-23516.nupkg.sha512",
         "System.Linq.Expressions.nuspec"
+      ]
+    },
+    "System.Linq.Parallel/4.0.1-beta-23516": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "zyGerJMjR4LXJ6A9VtP4GVA0sUWxTdI817vyrmhKduSiYdHizCc/NIppFFTcoGdzgb0qZ5+BNvisNyqB2GP9BQ==",
+      "files": [
+        "lib/dotnet5.4/System.Linq.Parallel.dll",
+        "lib/net45/_._",
+        "lib/netcore50/System.Linq.Parallel.dll",
+        "lib/win8/_._",
+        "lib/wpa81/_._",
+        "ref/dotnet5.2/de/System.Linq.Parallel.xml",
+        "ref/dotnet5.2/es/System.Linq.Parallel.xml",
+        "ref/dotnet5.2/fr/System.Linq.Parallel.xml",
+        "ref/dotnet5.2/it/System.Linq.Parallel.xml",
+        "ref/dotnet5.2/ja/System.Linq.Parallel.xml",
+        "ref/dotnet5.2/ko/System.Linq.Parallel.xml",
+        "ref/dotnet5.2/ru/System.Linq.Parallel.xml",
+        "ref/dotnet5.2/System.Linq.Parallel.dll",
+        "ref/dotnet5.2/System.Linq.Parallel.xml",
+        "ref/dotnet5.2/zh-hans/System.Linq.Parallel.xml",
+        "ref/dotnet5.2/zh-hant/System.Linq.Parallel.xml",
+        "ref/net45/_._",
+        "ref/netcore50/de/System.Linq.Parallel.xml",
+        "ref/netcore50/es/System.Linq.Parallel.xml",
+        "ref/netcore50/fr/System.Linq.Parallel.xml",
+        "ref/netcore50/it/System.Linq.Parallel.xml",
+        "ref/netcore50/ja/System.Linq.Parallel.xml",
+        "ref/netcore50/ko/System.Linq.Parallel.xml",
+        "ref/netcore50/ru/System.Linq.Parallel.xml",
+        "ref/netcore50/System.Linq.Parallel.dll",
+        "ref/netcore50/System.Linq.Parallel.xml",
+        "ref/netcore50/zh-hans/System.Linq.Parallel.xml",
+        "ref/netcore50/zh-hant/System.Linq.Parallel.xml",
+        "ref/win8/_._",
+        "ref/wpa81/_._",
+        "System.Linq.Parallel.4.0.1-beta-23516.nupkg",
+        "System.Linq.Parallel.4.0.1-beta-23516.nupkg.sha512",
+        "System.Linq.Parallel.nuspec"
       ]
     },
     "System.Linq.Queryable/4.0.1-beta-23516": {

@@ -13,8 +13,8 @@ namespace Samples.Common
             PrimaryStorageAccountName = "jhtest2";
             PrimaryStorageAccountKey = "u6eGo/IfJ0CaO4gwpDNWeTNwhu6GyInRGlR+aAYlO9uiAIfYSBtPCs0okJ9zy3bguKV1oR2Ukqcr7ala6i872A==";
 
-            IndexStorageAccountName = "";
-            IndexStorageAccountKey = "";
+            IndexStorageAccountName = "jhtest2idx";
+            IndexStorageAccountKey = "q0jIB778aJWZMwBgkVIiZ3zypNm/YQjko7HApJqyCmhp3rkNsyrm4jFGdLhV+EipOPtE+QZJXfSdnXRvMZ8EKw==";
 
             EncryptionKey16Chars = "IfJ0CaO4gwpDNWeTNwhu6GyInRGlR+aA";
 
@@ -32,7 +32,7 @@ namespace Samples.Common
         public string BlogID { get; set; }
 
         [Required]
-        public string url { get; set; }
+        public string Url { get; set; }
 
         public Dictionary<string, Post> Posts { get; set; }
 

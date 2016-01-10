@@ -8,6 +8,13 @@ _(...or what I wanted EF7 to do for Azure Tables - In all fairness, Azure Tables
 Written in .Net Core (compatible with the full framework), it utilizes the official WindowsAzure.Storage API > 6.2.2, Dependency Injection.
 
 
+## Features
+--Indexing
+--Azure Search
+--Encryption
+--Required Fields
+--Parent/Child Relationships
+
 ## Getting Started
 
 Download the nugetpackage (coming soon), define your classes and call them in context (in a familiar EF-like way).
