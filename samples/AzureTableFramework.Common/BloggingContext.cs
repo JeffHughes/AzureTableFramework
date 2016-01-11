@@ -1,5 +1,6 @@
 ﻿using AzureTableFramework.Core;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Samples.Common
 {

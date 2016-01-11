@@ -81,12 +81,12 @@ namespace AzureTableFramework.Core
             return filterString;
         }
 
-        public static string CombineQueries(string q1, string q2)
+        public static string CombineFilterStrings(string q1, string q2)
         {
-            return CombineQueries(new List<string> { q1, q2 });
+            return CombineFilterStrings(new List<string> { q1, q2 });
         }
 
-        public static string CombineQueries(List<string> queries)
+        public static string CombineFilterStrings(List<string> queries)
         {
             var currentQuery = queries.First();
             while (queries.Count > 1)

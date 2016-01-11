@@ -11,14 +11,18 @@ using System.Threading.Tasks;
 
 namespace AzureTableFramework.Core
 {
-    public partial class AzureTableDictionary<T>
+    public partial class AzureTableDictionary<T> : IDisposable
     {
         public async Task<T> GetByIDAsync(string ID)
         {
             var q = Utils.FilterString("RowKey", QueryComparisons.Equal, ID);
             var tq = new TableQuery { FilterString = q }.Take(1);
             var data = await QueryAsync(tq, null);
-            return Add(data.Results.FirstOrDefault());
+
+            if (data.Results.Any())
+                return Add(data.Results.FirstOrDefault());
+
+            return default(T);
         }
 
         public async Task<List<T>> GetLastUpdated(DateTime updatedAfterUTC)
@@ -26,19 +30,23 @@ namespace AzureTableFramework.Core
             var q = Utils.FilterString("LastUpdated", QueryComparisons.LessThanOrEqual, updatedAfterUTC);
             var tq = new TableQuery { FilterString = q };
             var data = await QueryAsync(tq, null);
-            return Add(data.Results);
-        }
 
-        public async Task<AzureTableQueryResults<T>> ComplexIndexedQuery()
-        {
-            //((LastUpdated ge datetime'2016-01-09T20:00:00.0000000Z') and (LastUpdated ge datetime'2016-01-09T20:00:00.0000000Z')) and (LastUpdated ge datetime'2016-01-09T20:00:00.0000000Z')
+            if (data.Results.Any())
+                return Add(data.Results);
 
-            //var expressions = Regex.Split(tableQuery.FilterString, " and ");
-
-            //foreach (var filter in expressions)
-            //{
             return null;
         }
+
+        //public async Task<AzureTableQueryResults<T>> ComplexIndexedQuery()
+        //{
+        //    //((LastUpdated ge datetime'2016-01-09T20:00:00.0000000Z') and (LastUpdated ge datetime'2016-01-09T20:00:00.0000000Z')) and (LastUpdated ge datetime'2016-01-09T20:00:00.0000000Z')
+
+        //    //var expressions = Regex.Split(tableQuery.FilterString, " and ");
+
+        //    //foreach (var filter in expressions)
+        //    //{
+        //    return null;
+        //}
 
         public async Task<AzureTableQueryResults<T>> QueryAsync(TableQuery tableQuery, TableContinuationToken token)
         {
@@ -55,27 +63,27 @@ namespace AzureTableFramework.Core
                         table = await Utils.GetCloudTableAsync(Utils.GetIndexTableName(typeof(T).Name, indexedProp.Name), _AzureTablesContext.IndexStorageAccount(), false);
                         tableQuery.FilterString = tableQuery.FilterString.Replace(indexedProp.Name, "PartitionKey");
 
-                        if (indexedProp.Name.Equals("LastUpdated")) UpdateFilterForLastUpdated(tableQuery);
+                        if (indexedProp.Name.Equals("LastUpdated")) UpdateFilterForLastUpdatedIndexCall(tableQuery);
                     }
 
                 if (!startingFilterString.Equals(tableQuery.FilterString))
                     Debug.WriteLine("Executing FilterString: " + tableQuery.FilterString);
             }
-            else
-            {
-                //return ComplexIndexedQuery();
-            }
+            //else
+            //{
+            //return ComplexIndexedQuery();
+            //}
 
             var tqs = await table.ExecuteQuerySegmentedAsync(tableQuery, token);
 
             return new AzureTableQueryResults<T>()
             {
-                DynamicTableEntities = (List<DynamicTableEntity>)tqs.Results,
+                Results = Utils.DynamicResultsToTypedList<T, DynamicTableEntity>(tqs.Results.ToList()),
                 token = tqs.ContinuationToken
             };
         }
 
-        private static void UpdateFilterForLastUpdated(TableQuery tableQuery)
+        private static void UpdateFilterForLastUpdatedIndexCall(TableQuery tableQuery)
         {
             if (tableQuery.FilterString.Contains("datetime'"))
             {
@@ -84,10 +92,9 @@ namespace AzureTableFramework.Core
                 try
                 {
                     var part = filterparts.Last();
-                    var dateTime = Convert.ToDateTime(part).ToUniversalTime();
+                    var dateTime = new DateTime(Convert.ToDateTime(part).Ticks, DateTimeKind.Utc);
                     var val = Utils.TicksFromMax(dateTime);
 
-                    //Debug.WriteLine("Query part: " + part + " = " + val + " = " + Utils.UTCDateTimeFromTicksFromMax(val));
                     tableQuery.FilterString = tableQuery.FilterString.Replace(part, val).Replace("datetime", "");
                 }
                 catch (Exception ex)
@@ -142,6 +149,10 @@ namespace AzureTableFramework.Core
                 Results = results,
                 token = segment.token
             };
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

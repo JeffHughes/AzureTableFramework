@@ -18,7 +18,7 @@ namespace AzureTableFramework.Core
         public AzureTableDictionary(AzureTablesContext context)
         {
             _AzureTablesContext = context;
-            Debug.WriteLine("instantiated w " + context.PrimaryStorageAccountKey);
+            //Debug.WriteLine("AzureTableDictionary instantiated for " + typeof(T).Name);
         }
 
         public Dictionary<string, T> Items { get; set; } = new Dictionary<string, T>();
@@ -51,6 +51,8 @@ namespace AzureTableFramework.Core
             if (string.IsNullOrEmpty(key))
                 throw new Exception("There is a problem w the RowKey for " + item.GetType().Name);
 
+            if (Items.ContainsKey(key)) Items.Remove(key);
+
             Items.Add(key, item);
             return item;
         }
@@ -74,41 +76,12 @@ namespace AzureTableFramework.Core
         }
 
         /// <summary>
-        /// Items that will be inserted or updated on "SaveChanges"
-        /// </summary>
-        /// <returns></returns>
-        public List<T> Upserts()
-        {
-            var list = new List<T>();
-
-            foreach (var item in Items.Values)
-            {
-                var deleted = (bool)Utils.GetVal(item, "_DeleteWithBatch");
-                if (!deleted) list.Add(item);
-            }
-            return list;
-        }
-
-        /// <summary>
-        /// Items that will be deleted on "SaveChanges"
-        /// </summary>
-        /// <returns></returns>
-        public List<T> Deletes()
-        {
-            var list = new List<T>();
-            foreach (var item in Items.Values)
-                if ((bool)Utils.GetVal(item, "_DeleteWithBatch"))
-                    list.Add(item);
-            return list;
-        }
-
-        /// <summary>
         /// Returns the values of Items as a list
         /// </summary>
         /// <returns></returns>
         public List<T> ToList()
         {
-            return (List<T>)Convert.ChangeType(Items.Values, typeof(List<>).MakeGenericType(new[] { typeof(T) }));
+            return (List<T>)Convert.ChangeType(Items.Values.ToList(), typeof(List<>).MakeGenericType(new[] { typeof(T) }));
         }
 
         /// <summary>

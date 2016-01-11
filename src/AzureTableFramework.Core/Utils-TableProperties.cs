@@ -1,8 +1,11 @@
-﻿using System;
+﻿using AutoMapper;
+using Microsoft.WindowsAzure.Storage.Table;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace AzureTableFramework.Core
 {
@@ -106,8 +109,7 @@ namespace AzureTableFramework.Core
 
         public static object SetVal(object obj, string propertyName, object value)
         {
-            if (obj == null) throw new Exception(" object not instantiated on prop:" + propertyName + " val:" + value);
-            // if (!PropertyExists(obj, propertyName)) throw new Exception(" no such property: " + propertyName + " for " + obj.GetType().Name);
+            if (obj == null) throw new Exception(string.Format(" object not instantiated on prop:{0} val:{1}", propertyName, value));
 
             var typedValue = Convert.ChangeType(value, obj.GetType().GetProperty(propertyName).PropertyType);
             obj.GetType().GetProperty(propertyName).SetValue(obj, typedValue);
@@ -182,7 +184,67 @@ namespace AzureTableFramework.Core
         public static DateTime UTCDateTimeFromTicksFromMax(string TicksFromMax)
         {
             var TicksFromMaxLong = long.MaxValue - Convert.ToInt64(TicksFromMax);
-            return new DateTime(TicksFromMaxLong);
+            return new DateTime(TicksFromMaxLong, DateTimeKind.Utc);
+        }
+
+        public static List<T> TableResultsToTypedList<T>(IList<TableResult> TR)
+        {
+            var ConvertedResults = new List<T>();
+
+            foreach (var item in TR)
+            {
+                T obj = AzureTableRecordToTypedObject<T>((T)item.Result);
+                ConvertedResults.Add(obj);
+            }
+
+            return ConvertedResults;
+        }
+
+        public static List<T> DynamicResultsToTypedList<T, T2>(List<T2> items)
+        {
+            var ConvertedResults = new List<T>();
+
+            Mapper.CreateMap<T2, T>();
+
+            foreach (var obj1 in items)
+            {
+                T obj = (T)Mapper.Map<T>(obj1);
+
+                obj = AzureTableRecordToTypedObject<T>(obj);
+
+                if (typeof(T2) == typeof(DynamicTableEntity))
+                    foreach (var p in ((dynamic)obj1).Properties)
+                        Utils.SetVal(obj, p.Key, p.Value.PropertyAsObject);
+
+                ConvertedResults.Add(obj);
+            }
+
+            return ConvertedResults;
+        }
+
+        private static T AzureTableRecordToTypedObject<T>(T obj)
+        {
+            var PartitionKeyPropertyName = GetPartitionKeyPropertyName(typeof(T));
+            var RowKeyPropertyName = GetRowKeyPropertyName(typeof(T));
+
+            if ((GetVal(obj, RowKeyPropertyName) == null))
+                SetVal(obj, RowKeyPropertyName, (string)GetVal(obj, "RowKey"));
+
+            if ((GetVal(obj, PartitionKeyPropertyName) == null))
+                SetVal(obj, PartitionKeyPropertyName, (string)GetVal(obj, "PartitionKey"));
+
+            //SetVal(obj, "PartitionKey", null);
+            //SetVal(obj, "RowKey", null);
+
+            if (GetVal(obj, "ETag").ToString().Contains("datetime"))
+            {    //"W/\"datetime'2016-01-11T17%3A29%3A41.953478Z'\""
+                var timestring = Regex.Split((obj as TableEntity).ETag, "datetime").Last().Replace("'", "").Replace("%3A", ":").Replace("\"", "");
+                (obj as TableEntity).Timestamp = Convert.ToDateTime(timestring);
+            }
+
+            //TODO: Decryption
+
+            return obj;
         }
     }
 }
