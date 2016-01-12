@@ -10,10 +10,10 @@ Written in .Net Core (compatible with the full framework), it utilizes the offic
 
 ## Features
 - Indexing / Azure Search Integration
-- Parent/Child Relationships
+- Parent / Child Relationships
 - Backups
 - Encryption
-- Required Fields
+- Required / Unique / Field Validation
 
 ## Getting Started
 
