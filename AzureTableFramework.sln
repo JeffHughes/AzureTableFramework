@@ -43,9 +43,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modeling", "Modeling", "{DB
 		docs\Modeling\index.rst = docs\Modeling\index.rst
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "aspnet5", "aspnet5", "{6E4B2645-D87C-4947-BF74-FB14917B613F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "core-dotnet", "core-dotnet", "{6E4B2645-D87C-4947-BF74-FB14917B613F}"
 	ProjectSection(SolutionItems) = preProject
-		docs\gettingstarted\aspnet5\index.rst = docs\gettingstarted\aspnet5\index.rst
+		docs\gettingstarted\aspnet5\index.md = docs\gettingstarted\aspnet5\index.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "full-dotnet", "full-dotnet", "{9F4CDC9B-C5B0-40DC-A0E7-4184FF3F3F4B}"

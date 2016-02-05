@@ -1,13 +1,20 @@
-﻿using System;
+﻿using Microsoft.AspNet.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Mvc;
 
 namespace WebApp.Controllers
 {
     public class HomeController : Controller
     {
+        public Services.TimeService TimeService { get; set; }
+
+        public HomeController(Services.TimeService timeService)
+        {
+            TimeService = timeService;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -15,7 +22,7 @@ namespace WebApp.Controllers
 
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
+            ViewBag.Message = TimeService.Ticks + " From Controller";
 
             return View();
         }

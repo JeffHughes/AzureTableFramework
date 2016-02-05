@@ -26,5 +26,34 @@ namespace AzureTableFramework.Core
             if (!excludeIDs.Any()) return includeList;
             return includeList.Where(item => !excludeIDs.Contains(GetVal(item, propertyName))).ToList();
         }
+
+        //returnArray.AsNotNull()
+        public static IEnumerable<T> AsNotNull<T>(this IEnumerable<T> original)
+        {
+            return original ?? new T[0];
+        }
+
+        /// <summary>
+        /// returnArray.ForEach(Console.WriteLine)
+        ///    or
+        /// returnArray.ForEach(i => UpdateStatus(string.Format("{0}% complete", i)));
+        ///    or
+        /// returnArray.ForEach(i =>
+        ///  {
+        ///  var thisInt = i;
+        ///    var next = i++;
+        ///    if (next > 10) Console.WriteLine("Match: {0}", i);
+        ///  };
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="items"></param>
+        /// <param name="action"></param>
+    
+        public static void ForEach<T>(this IEnumerable<T> items, Action<T> action)
+        {
+            if (items == null) return;
+            foreach (var item in items) action(item);
+        }
+
     }
 }

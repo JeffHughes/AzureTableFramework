@@ -46,28 +46,26 @@ namespace AzureTableFramework.Core
             throw new Exception("PartitionKey property attribute not found for " + t.Name);
         }
 
-        public static string GetPartitionKeyValue(Object obj)
+        public static string GetPartitionKeyValue<T>(T obj, bool SetDefaultValueIfNull)
         {
             var type = obj.GetType();
-
-            return GetPartitionKeyValue(GetPartitionKeyPropertyName(type), type);
+            string PartitionKeyPropertyName = GetPartitionKeyPropertyName(type);
+            return GetPartitionKeyValue(PartitionKeyPropertyName, obj, SetDefaultValueIfNull);
         }
 
-        public static string GetPartitionKeyValue(string PartitionKeyPropertyName, Object obj)
+        public static string GetPartitionKeyValue<T>(string PartitionKeyPropertyName, T obj, bool SetDefaultValueIfNull)
         {
-            var type = obj.GetType();
-            var PK = "";
+            var PK = $"{DateTime.UtcNow.Year}-{DateTime.UtcNow.Month}";
 
             var PossiblyNullObject = Utils.GetVal(obj, PartitionKeyPropertyName);
 
             if (PossiblyNullObject == null)
-            {
-                PK = DateTime.UtcNow.Year + "-" + DateTime.UtcNow.Month;
-                Utils.SetVal(obj, PartitionKeyPropertyName, PK);
-            }
-            else {
+                if (SetDefaultValueIfNull)
+                    SetVal(obj, PartitionKeyPropertyName, PK);
+                else
+                    return string.Empty;
+            else
                 PK = PossiblyNullObject.ToString();
-            }
 
             return PK;
         }
@@ -98,7 +96,7 @@ namespace AzureTableFramework.Core
             return t.Name + "ID";
         }
 
-        public static object GetVal(object obj, string propertyName)
+        public static object GetVal<T>(T obj, string propertyName)
         {
             if (obj == null) return null;
 
@@ -212,7 +210,7 @@ namespace AzureTableFramework.Core
 
                 obj = AzureTableRecordToTypedObject<T>(obj);
 
-                if (typeof(T2) == typeof(DynamicTableEntity))
+                if (typeof(T2) == typeof(DynamicTableEntity) )
                     foreach (var p in ((dynamic)obj1).Properties)
                         Utils.SetVal(obj, p.Key, p.Value.PropertyAsObject);
 

@@ -24,6 +24,7 @@
         "framework": ".NETFramework,Version=v4.5.1",
         "dependencies": {
           "AutoMapper": "4.1.1",
+          "Microsoft.Extensions.Configuration.Abstractions": "1.0.0-rc1-final",
           "System.Collections.Immutable": "1.1.37",
           "System.Linq.Parallel": "4.0.1-beta-23516",
           "System.Linq.Queryable": "4.0.1-beta-23516",
@@ -1787,6 +1788,7 @@
         "dependencies": {
           "AutoMapper": "4.1.1",
           "Microsoft.CSharp": "4.0.1-beta-23516",
+          "Microsoft.Extensions.Configuration.Abstractions": "1.0.0-rc1-final",
           "System.Collections": "4.0.11-beta-23516",
           "System.Collections.Immutable": "1.1.37",
           "System.Linq": "4.0.1-beta-23516",
@@ -4282,6 +4284,7 @@
         "framework": ".NETFramework,Version=v4.5.1",
         "dependencies": {
           "AutoMapper": "4.1.1",
+          "Microsoft.Extensions.Configuration.Abstractions": "1.0.0-rc1-final",
           "System.Collections.Immutable": "1.1.37",
           "System.Linq.Parallel": "4.0.1-beta-23516",
           "System.Linq.Queryable": "4.0.1-beta-23516",
@@ -6023,6 +6026,7 @@
         "framework": ".NETFramework,Version=v4.5.1",
         "dependencies": {
           "AutoMapper": "4.1.1",
+          "Microsoft.Extensions.Configuration.Abstractions": "1.0.0-rc1-final",
           "System.Collections.Immutable": "1.1.37",
           "System.Linq.Parallel": "4.0.1-beta-23516",
           "System.Linq.Queryable": "4.0.1-beta-23516",
@@ -7789,6 +7793,7 @@
         "dependencies": {
           "AutoMapper": "4.1.1",
           "Microsoft.CSharp": "4.0.1-beta-23516",
+          "Microsoft.Extensions.Configuration.Abstractions": "1.0.0-rc1-final",
           "System.Collections": "4.0.11-beta-23516",
           "System.Collections.Immutable": "1.1.37",
           "System.Linq": "4.0.1-beta-23516",
@@ -10679,6 +10684,7 @@
         "dependencies": {
           "AutoMapper": "4.1.1",
           "Microsoft.CSharp": "4.0.1-beta-23516",
+          "Microsoft.Extensions.Configuration.Abstractions": "1.0.0-rc1-final",
           "System.Collections": "4.0.11-beta-23516",
           "System.Collections.Immutable": "1.1.37",
           "System.Linq": "4.0.1-beta-23516",

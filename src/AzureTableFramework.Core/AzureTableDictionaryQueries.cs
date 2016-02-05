@@ -19,10 +19,26 @@ namespace AzureTableFramework.Core
             var tq = new TableQuery { FilterString = q }.Take(1);
             var data = await QueryAsync(tq, null);
 
-            if (data.Results.Any())
-                return Add(data.Results.FirstOrDefault());
+            if (hasResults(data))
+                return Add(Utils.DynamicResultsToTypedList<T, T>(data.Results).FirstOrDefault());
 
             return default(T);
+        }
+
+        internal async Task<List<T>> GetAllByIDAsync(string ID)
+        {
+            var q = Utils.FilterString("RowKey", QueryComparisons.Equal, ID);
+            var data = await QueryAllAsync(q);
+
+            if (hasResults(data))
+                return Utils.DynamicResultsToTypedList<T, T>(data.Results);
+
+            return null;
+        }
+
+        bool hasResults(AzureTableQueryResults<T> data)
+        {
+            return data != null && data.Results != null && (bool)data?.Results?.Any();
         }
 
         public async Task<List<T>> GetLastUpdated(DateTime updatedAfterUTC)
