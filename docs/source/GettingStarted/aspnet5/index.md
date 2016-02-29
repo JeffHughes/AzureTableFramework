@@ -49,6 +49,10 @@ public void ConfigureServices(IServiceCollection services)
 ```
 
 ```
+
+using AzureTableFramework.Core;
+using Microsoft.Extensions.Configuration;
+...
 public class BloggingContext : AzureTablesContext
 {
     public AzureTableDictionary<Blog> Blogs { get; set; }

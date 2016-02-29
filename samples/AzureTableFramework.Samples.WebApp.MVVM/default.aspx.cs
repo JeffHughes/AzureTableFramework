@@ -23,7 +23,6 @@ namespace AzureTableFramework.Samples.WebApp.MVVM
                 var BLOG = new Blog();
 
                 BLOG.AuthorID = "123456789";
-                BLOG.BlogID = Guid.NewGuid().ToString();
 
                 DB.Blogs.Add(BLOG);
 

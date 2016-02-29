@@ -15,7 +15,7 @@ namespace AzureTableFramework.Core
         /// <returns>boolean</returns>
         public static bool IsPartitionKey<T>(Expression<Func<T>> ex)
         {
-            return ((MemberExpression)ex.Body).Member.GetCustomAttributes(typeof(PartionKeyAttribute), false).Any();
+            return ((MemberExpression)ex.Body).Member.GetCustomAttributes(typeof(PartitionKeyAttribute), false).Any();
         }
 
         ///// <param name="ex">Utils.IsPartitionKey(() => new SObjectS().SPropertyS))</param>
@@ -36,7 +36,7 @@ namespace AzureTableFramework.Core
         {
             foreach (var prop in t.GetProperties())
                 foreach (var atts in prop.GetCustomAttributes())
-                    if (atts.GetType() == typeof(PartionKeyAttribute))
+                    if (atts.GetType() == typeof(PartitionKeyAttribute))
                         if (prop.PropertyType != typeof(string))
                             throw new Exception(t.Name + " partitionkey attribute is on " + prop.Name +
                                 " a " + prop.PropertyType + ".  But, partition keys must be strings");

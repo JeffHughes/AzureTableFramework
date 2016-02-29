@@ -11,11 +11,11 @@ namespace Samples.Common
 
         public BloggingContext()
         {
-            PrimaryStorageAccountName = "jhtest2";
-            PrimaryStorageAccountKey = "u6eGo/IfJ0CaO4gwpDNWeTNwhu6GyInRGlR+aAYlO9uiAIfYSBtPCs0okJ9zy3bguKV1oR2Ukqcr7ala6i872A==";
+            PrimaryStorageAccountName = "AzureBlogTest1";
+            PrimaryStorageAccountKey = "u6eGo/IfJ0CaO4gwpDNWeTNwhu6GyThisIsAFakeCodeSBtPCs0okJ9zy3bguKV1oR2Ukqcr7ala6i872A==";
 
-            IndexStorageAccountName = "jhtest2idx";
-            IndexStorageAccountKey = "q0jIB778aJWZMwBgkVIiZ3zypNm/YQjko7HApJqyCmhp3rkNsyrm4jFGdLhV+EipOPtE+QZJXfSdnXRvMZ8EKw==";
+            IndexStorageAccountName = "AzureBlogTest1idx";
+            IndexStorageAccountKey = "q0jIB778aJWZMwBgkVIiZ3zypNm/YQjkThisIsAFakeCodekNsyrm4jFGdLhV+EipOPtE+QZJXfSdnXRvMZ8EKw==";
 
             EncryptionKey16Chars = "IfJ0CaO4gwpDNWeTNwhu6GyInRGlR+aA";
 
@@ -26,7 +26,7 @@ namespace Samples.Common
 
     public class Blog : AzureTableEntity
     {
-        [PartionKey]
+        [PartitionKey]
         public string AuthorID { get; set; }
 
         //RowKey
@@ -45,7 +45,7 @@ namespace Samples.Common
 
     public class Post : AzureTableEntity
     {
-        [PartionKey]
+        [PartitionKey]
         public string BlogID { get; set; }
 
         //RowKey

@@ -1,25 +1,29 @@
-This is very much a work in progress - don't judge me, yet!
-
-# AzureTableFramework
+Welcome to Azure Table Framework Documentation
+==============================================
 
 AzureTableFramework is an object mapper that enables .NET developers to work with Azure Table data using domain-specific objects. It eliminates the need for most of the data-access code that developers usually need to write.
 _(...or what I wanted EF7 to do for Azure Tables - In all fairness, Azure Tables are different enough from SQL Tables that it deserves its own library seperate from a SQL-based EF)._
 
 Written in .Net Core (compatible with the full framework), it utilizes the official WindowsAzure.Storage API > 6.2.2, Dependency Injection.
 
-## Features
-- Indexing / Azure Search Integration
-- Parent / Child Relationships
-- (Azure Storage) Blob & Queue Support
-- Backups
-- Encryption
-- Required / Unique / Field Validation
 
-## Getting Started
+## Features
+
+.. toctree::
+    :titlesonly:
+
+    GettingStarted/index
+    Modeling/index
+	Indexing/index
+	AzureSearch/index
+	Relationships/index
+
+
+	## Getting Started
 
 Download the nugetpackage (coming soon), define your classes and call them in context (in a familiar EF-like way).
 
-[Modeling](http://AzureTableFramework.com/ "Visit AzureTableFramework.com")
+Modeling [http://AzureTableFramework.com](http://AzureTableFramework.com/ "Visit AzureTableFramework.com")	
 ```
 public class BloggingContext : AzureTablesContext
 {
@@ -29,7 +33,7 @@ public class BloggingContext : AzureTablesContext
 
 public class Blog : AzureTableEntity
 {
-    [PartitionKey]
+    [PartionKey]
     public string AuthorID { get; set; }
     //RowKey
     public string BlogID { get; set; }
@@ -39,7 +43,7 @@ public class Blog : AzureTableEntity
 
 public class Post : AzureTableEntity
 {
-    [PartitionKey]
+    [PartionKey]
     public string BlogID { get; set; }
     //RowKey
     public string PostID { get; set; }
@@ -69,9 +73,9 @@ using (var DB = new BloggingContext())
 
 ## Important Notes
 
-There are a few key differences in using this library than you are probably used to;
+There are a few key differences in using this library than you are probably used to; 
 
-**If you don't read any other documentation, read this next section ...**
+**If you don't read any other documentation, read this next section ...** 
 
 ### Key Differences
 
@@ -81,9 +85,9 @@ All you need are azure storage credentials.  When "SaveChanges" is called, table
 **Tables are named after Classes**  (public class Blog {} => "Blog" Table  )
 If you change a class name (_and please don't forget it's corresponding ID property name, too_), a new table will be created the next time "SaveChanges" is called and previous data will remain in the old table with the old class name.  There is no migration.
 
-**RowKeys are ClassNames + "ID"**
+**RowKeys are ClassNames + "ID"**  
 There must be a (string) property that matches the case-sensitive pattern  Class Name + "ID" (e.g. class named Blog, must have a (string) property of "BlogID").
-RowKeys are GUIDs by default, if you don't otherwise populate the property, a new guid (as string) will be created before saving.
+RowKeys are GUIDs by default, if you don't otherwise populate the property, a new guid will be created before saving.
 
 ```
 public class Blog : AzureTableEntity
@@ -101,29 +105,32 @@ public class Blog : AzureTableEntity
 
 **Azure Tables require PartitionKeys to be defined!**
 (_Think of it as less of a burden and more like a free index_)
-**If you don't decorate one (string) property in each class with a [PartitionKey] attribute; an error will be thrown.** I suggest using a foriegn key propery and situating it above the ID property.
-Results will eventually be returned sorted by PartitionKey, then RowKey alphanumerically.
+**If you don't decorate one (string) property in each class with a [PartionKey] attribute; an error will be thrown.** I suggest using a foriegn key propery and situating it above the ID property.
+Results will eventually be returned sorted by PartitionKey, then RowKey alphanumerically.  
 
 ### Additional Differences
 
 **Code-First Only!**
 
-**You probably won't be able to find the columns for Class + "ID" and whatevery property you decorated with [PartitionKey] in the storage table**
-	There's no reason to save the data twice.  So, in the table, the data from the Class Name + "ID" property is removed and saved as the RowKey column and the data in the property decorated by [PartitionKey] is removed from that property and saved as the PartitionKey column.  The data is restored to the appropriate field from storage.
 
+
+**You won't be able to find the columns for Class + "ID" and whatevery property you decorated with [PartitionKey] in the storage table**
+	There's no reason to save the data twice.  So, in the table, the data from the Class Name + "ID" property is removed and saved as the RowKey column and the data in the property decorated by [PartitionKey] is removed from that property and saved as the PartitionKey column.  The data is restored to the appropriate field from storage.
+	
 ```
     public class Blog : AzureTableEntity
     {
-        [PartitionKey]
+        [PartionKey]
         public string AuthorID { get; set; }
         //RowKey
         public string BlogID { get; set; }
         public string Url { get; set; }
         public Dictionary<string, Post> Posts { get; set; }
-    }
+    }   
 ```
 
 So, **Blog Table** will look like this:
+
 
 |PartitionKey|RowKey|Timestamp		  |Url |
 |------------|------|-----------------|----|
@@ -132,33 +139,40 @@ So, **Blog Table** will look like this:
 
 instead of this:
 
+
 |PartitionKey	|	AuthorID	|	RowKey		|	BlogID		|	Timestamp		|	Url			|
 |---------------|---------------|---------------|---------------|-------------------|---------------|
 |HughesJeff		|**HughesJeff**	|Blog1			|**Blog1**		|1 Jan 2016 2:30PM	|Url1			|
 |HughesJeff		|**HughesJeff**	|Blog2			|**Blog2**		|1 Jan 2016 4:30PM	|Url2			|
 ||:small_red_triangle: **Duplicate** :small_red_triangle: || :small_red_triangle: **Duplicate** :small_red_triangle:|||
 
+
 The library handles the deduping and reconstruction, behind the scenes.
 
+
 **AzureTableDictionary.Items stores a dictionary retreivable by ID**
--- Using Items.New() **adds a GUID (as a string) automatically**, and adds the item to the items list by that GUID.  If you change the ID property value, it won't be automagically reflected in the Items keys list.
+-- Using Items.New() **adds a GUID automatically**, and adds the item to the items list by that GUID.  If you change the ID, it won't be automagically reflected in the Items list.
 
 ```
 DB.Blogs.Items["Blog1"]
 ```
 
 <!--There are no Server-side relationships and Azure couldn't care less about data definition changes.
-If you want to keep track of-->
+If you want to keep track of--> 
+
 
 ### Key Similarities to EF
 
 POCO defined data access
+
 
 ## Why Azure Tables?
 
 I LOVE AZURE TABLES!
 
 For TCO (for most data needs), AzureTables beats every other database.
+
+	 
 
 |							| [AzureTableFramework](http://AzureTableFramework.com/ "Visit AzureTableFramework.com")									|
 | ------------------------: | ------------------------------------------------------------------------------------------------------------------------- |
@@ -167,3 +181,22 @@ For TCO (for most data needs), AzureTables beats every other database.
 | GitHub Repository			| https://github.com/JeffHughes/AzureTableFramework.git																		|
 | Owner						| Jeff Hughes (me@jeffhughes.com)																							|
 | First Version				|  created 5 Jan 2016																										|
+
+
+
+
+
+Contents:
+
+.. toctree::
+   :maxdepth: 2
+
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
+
