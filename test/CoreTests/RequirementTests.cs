@@ -27,6 +27,8 @@ namespace CoreTests
                     exceptionThrown = true;
                 }
 
+                Console.WriteLine("write line");
+
                 Assert.True(exceptionThrown);
             }
         }

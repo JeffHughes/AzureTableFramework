@@ -7,41 +7,60 @@ using Xunit;
 
 namespace CoreTests
 {
-    public class BasicCRUDTests
+    public class DynamicIndexes
     {
         [Fact]
-        public async Task AddRetreiveDelete()
+        public async Task CreateObjectWLongNamedDynamicIndex()
         {
-            var BlogID = Guid.NewGuid().ToString();
+            var CommentID = "11111111-1111-1111-1111-111111111111-11111111-1111-1111-1111-111111111111"; // Guid.NewGuid().ToString(); //
+            var UserID = "11111111-1111-1111-1111-111111111112-11111111-1111-1111-1111-111111111112"; //Guid.NewGuid().ToString(); //
 
             using (var DB = new BloggingContext())
             {
-                var B = DB.Blogs.Add(new Blog { BlogID = BlogID });
+                var B = DB.Comments.Add(new Comment { CommentID = CommentID });
 
-                B.AuthorID = Guid.NewGuid().ToString();
-                B.Url = "SomeURL";
+                B.UserID = UserID;
+                B.PostID = "TestPostID";
 
                 await DB.SaveChangesAsync();
-            }
-
-            using (var DB = new BloggingContext())
-            {
-                var B = await DB.Blogs.GetByIDAsync(BlogID);
-                // DB.Blogs.Items[BlogID].HardDelete();
-                Assert.True(B != null);
-                B.HardDelete();
-                await DB.SaveChangesAsync();
-            }
-
-            using (var DB = new BloggingContext())
-            {
-                var B2 = await DB.Blogs.GetByIDAsync(BlogID);
-                Assert.True(B2 == null);
             }
         }
 
         [Fact]
-        private static async Task RetreiveOnLastUpdated()
+        public async Task CreateObjectWDynamicIndex()
+        {
+            var CommentID = "11111111-1111-1111-1111-111111111111"; // Guid.NewGuid().ToString(); //
+            var UserID = "11111111-1111-1111-1111-111111111112"; //Guid.NewGuid().ToString(); //
+
+            using (var DB = new BloggingContext())
+            {
+                var B = DB.Comments.Add(new Comment { CommentID = CommentID });
+
+                B.UserID = UserID;
+                B.PostID = "TestPostID";
+
+                await DB.SaveChangesAsync();
+            }
+
+            //using (var DB = new BloggingContext())
+            //{
+            //    var B = await DB.Comments.GetByIDAsync(CommentID);
+            //    // DB.Comments.Items[CommentID].HardDelete();
+            //    Assert.True(B != null);
+            //    B.HardDelete();
+            //    await DB.SaveChangesAsync();
+            //}
+
+            //using (var DB = new BloggingContext())
+            //{
+            //    var B2 = await DB.Comments.GetByIDAsync(CommentID);
+            //    Assert.True(B2 == null);
+            //}
+        }
+
+        /*
+        [Fact]
+        private async Task RetreiveOnLastUpdated()
         {
             var BlogID = Guid.NewGuid().ToString();
 
@@ -51,6 +70,7 @@ namespace CoreTests
 
                 B.AuthorID = Guid.NewGuid().ToString();
                 B.Url = "SomeURL";
+                B.TestIndex = "IndexTest1";
 
                 await DB.SaveChangesAsync();
 
@@ -106,6 +126,7 @@ namespace CoreTests
 
                     B.AuthorID = AuthorID;
                     B.Url = "SomeURL";
+                    B.TestIndex = "IndexTest1";
                 }
                 await DB.SaveChangesAsync();
 
@@ -136,6 +157,7 @@ namespace CoreTests
 
                     B.AuthorID = AuthorID;
                     B.Url = "SomeURL";
+                    B.TestIndex = "IndexTest1";
                 }
 
                 for (int x = 0; x < 5; x++)
@@ -157,5 +179,51 @@ namespace CoreTests
                 Debug.WriteLine("===== Total Delete Time: " + SW2.Elapsed);
             }
         }
+
+        [Fact]
+        public async Task RemoveObsoleteData()
+        {
+            var AuthorID1 = "11111111-1111-1111-1111-111111111111"; // Guid.NewGuid().ToString();
+            var AuthorID2 = "11111111-1111-1111-1111-111111111112"; // Guid.NewGuid().ToString();
+
+            var BlogID = Guid.NewGuid().ToString();
+
+            using (var DB = new BloggingContext())
+            {
+                var B = DB.Blogs.Add(new Blog { BlogID = BlogID });
+
+                B.AuthorID = AuthorID1;
+                B.Url = "SomeURL";
+                B.TestIndex = "IndexTest1";
+
+                await DB.SaveChangesAsync();
+            }
+
+            using (var DB = new BloggingContext())
+            {
+                var B = DB.Blogs.Add(new Blog { BlogID = BlogID });
+
+                B.AuthorID = AuthorID2;
+                B.Url = "SomeURL";
+                B.TestIndex = "IndexTest1";
+
+                await DB.SaveChangesAsync();
+            }
+
+            using (var DB = new BloggingContext())
+            {
+                var B = await DB.Blogs.GetAllByPartitionKeyAsync(AuthorID1);
+                Assert.True(B == null);
+                await DB.SaveChangesAsync();
+            }
+
+            using (var DB = new BloggingContext())
+            {
+                var B2 = await DB.Blogs.GetByIDAsync(BlogID);
+                B2.HardDelete();
+                await DB.SaveChangesAsync();
+            }
+
+    */
     }
 }

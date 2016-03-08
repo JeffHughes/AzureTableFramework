@@ -35,7 +35,8 @@ namespace AzureTableFramework.Core
 
             try
             {
-                if (CreateIfNotExist) await Table.CreateIfNotExistsAsync();
+                if (CreateIfNotExist) { await Table.CreateIfNotExistsAsync(); }
+                else if (!(await Table.ExistsAsync())) return null;
             }
             catch (Exception EX)
             {

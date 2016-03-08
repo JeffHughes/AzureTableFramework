@@ -210,7 +210,7 @@ namespace AzureTableFramework.Core
 
                 obj = AzureTableRecordToTypedObject<T>(obj);
 
-                if (typeof(T2) == typeof(DynamicTableEntity) )
+                if (typeof(T2) == typeof(DynamicTableEntity))
                     foreach (var p in ((dynamic)obj1).Properties)
                         Utils.SetVal(obj, p.Key, p.Value.PropertyAsObject);
 
@@ -220,7 +220,7 @@ namespace AzureTableFramework.Core
             return ConvertedResults;
         }
 
-        private static T AzureTableRecordToTypedObject<T>(T obj)
+        public static T AzureTableRecordToTypedObject<T>(T obj)
         {
             var PartitionKeyPropertyName = GetPartitionKeyPropertyName(typeof(T));
             var RowKeyPropertyName = GetRowKeyPropertyName(typeof(T));

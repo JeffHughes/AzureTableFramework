@@ -23,6 +23,8 @@ namespace AzureTableFramework.Core
 
         public Dictionary<string, T> Items { get; set; } = new Dictionary<string, T>();
 
+        public DateTime Timestamp { get; set; }
+
         /// <summary>
         /// Returns the name of the type of the AzureTableDictionary
         /// </summary>

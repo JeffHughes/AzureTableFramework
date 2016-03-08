@@ -13,12 +13,16 @@ namespace AzureTableFramework.Core
 
         public void SoftDelete()
         {
+            //if (!(this is object) || this == null) return;
+
             _IsSoftDeleted = true;
             _HardDeleteWithBatch = false;
         }
 
         public void HardDelete()
         {
+            //if (!(this is object) || this == null) return;
+
             _IsSoftDeleted = false;
             _HardDeleteWithBatch = true;
         }
@@ -28,7 +32,6 @@ namespace AzureTableFramework.Core
         public string LastUpdated
         {
             get { return Utils.TicksFromMax(Timestamp.UtcDateTime); }
-            //get { return (long.MaxValue - Timestamp.Ticks).ToString(); }
         }
     }
 }

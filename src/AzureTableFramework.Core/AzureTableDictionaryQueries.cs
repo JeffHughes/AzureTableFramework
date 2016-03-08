@@ -25,7 +25,7 @@ namespace AzureTableFramework.Core
             return default(T);
         }
 
-        internal async Task<List<T>> GetAllByIDAsync(string ID)
+        public async Task<List<T>> GetAllByIDAsync(string ID)
         {
             var q = Utils.FilterString("RowKey", QueryComparisons.Equal, ID);
             var data = await QueryAllAsync(q);
@@ -36,7 +36,18 @@ namespace AzureTableFramework.Core
             return null;
         }
 
-        bool hasResults(AzureTableQueryResults<T> data)
+        public async Task<List<T>> GetAllByPartitionKeyAsync(string PartitionKeyValue)
+        {
+            var q = Utils.FilterString("PartitionKey", QueryComparisons.Equal, PartitionKeyValue);
+            var data = await QueryAllAsync(q);
+
+            if (hasResults(data))
+                return Utils.DynamicResultsToTypedList<T, T>(data.Results);
+
+            return null;
+        }
+
+        public bool hasResults(AzureTableQueryResults<T> data)
         {
             return data != null && data.Results != null && (bool)data?.Results?.Any();
         }
@@ -76,7 +87,7 @@ namespace AzureTableFramework.Core
                 foreach (var indexedProp in Utils.GetNonPartitionIndexProperties(typeof(T)))
                     if (tableQuery.FilterString.Contains(indexedProp.Name))
                     {
-                        table = await Utils.GetCloudTableAsync(Utils.GetIndexTableName(typeof(T).Name, indexedProp.Name), _AzureTablesContext.IndexStorageAccount(), false);
+                        table = await Utils.GetCloudTableAsync(Utils.IndexTableName(typeof(T).Name, indexedProp.Name), _AzureTablesContext.IndexStorageAccount(), false);
                         tableQuery.FilterString = tableQuery.FilterString.Replace(indexedProp.Name, "PartitionKey");
 
                         if (indexedProp.Name.Equals("LastUpdated")) UpdateFilterForLastUpdatedIndexCall(tableQuery);

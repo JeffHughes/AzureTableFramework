@@ -17,18 +17,38 @@ namespace AzureTableFramework.Core
     public class EncryptAttribute : Attribute
     { }
 
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public class IndexAttribute : Attribute
     {
-        public string Name { get; set; }
+    }
 
-        public IndexAttribute()
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
+    public class DynamicIndexAttribute : Attribute
+    {
+        public List<string> Properties { get; set; }
+
+        //public DynamicIndexAttribute()
+        //{
+        //}
+
+        public DynamicIndexAttribute(params string[] properties)
+        {
+            Properties = properties.ToList();
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    public class BlobAttribute : Attribute
+    {
+        public string FileExtension { get; set; }
+
+        public BlobAttribute()
         {
         }
 
-        public IndexAttribute(string name)
+        public BlobAttribute(string ext)
         {
-            Name = name;
+            FileExtension = ext;
         }
     }
 

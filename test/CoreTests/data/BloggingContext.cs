@@ -1,4 +1,5 @@
 ﻿using AzureTableFramework.Core;
+using Microsoft.WindowsAzure.Storage.Table;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -8,6 +9,7 @@ namespace Samples.Common
     {
         public AzureTableDictionary<Blog> Blogs { get; set; }
         public AzureTableDictionary<Post> Posts { get; set; }
+        public AzureTableDictionary<Comment> Comments { get; set; }
 
         public BloggingContext()
         {
@@ -65,5 +67,22 @@ namespace Samples.Common
 
         public string Title { get; set; }
         public string Content { get; set; }
+    }
+
+    public class Comment : AzureTableEntity
+    {
+        [PartitionKey]
+        public string PostID { get; set; }
+
+        public string CommentID { get; set; }
+
+        public string UserID { get; set; }
+
+        [DynamicIndex("UserID")]
+        [IgnoreProperty]
+        public new string LastUpdated
+        {
+            get { return Utils.TicksFromMax(Timestamp.UtcDateTime); }
+        }
     }
 }

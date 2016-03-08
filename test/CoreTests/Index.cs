@@ -7,7 +7,7 @@ using Xunit;
 
 namespace CoreTests
 {
-    public class IndexTests
+    public class Index
     {
         [Fact]
         public async Task DifferentProperties()
@@ -21,6 +21,7 @@ namespace CoreTests
 
                 B.AuthorID = AuthorID;
                 B.Url = "SomeURL";
+                B.TestIndex = "IndexTest1";
 
                 await DB.SaveChangesAsync();
             }

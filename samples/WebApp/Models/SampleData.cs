@@ -1,10 +1,6 @@
 ﻿using AzureTableFramework.Core;
-using Microsoft.WindowsAzure.Storage.Table;
 using Samples.Common;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace WebApp.Models
@@ -18,26 +14,31 @@ namespace WebApp.Models
 
         public static async Task RunSampleData()
         {
-            var BlogID = Guid.NewGuid().ToString();
+            var BlogID = "11111111-1111-1111-1111-111111111111"; // Guid.NewGuid().ToString();
+            var AuthorID = "11111111-1111-1111-1111-111111111112"; // Guid.NewGuid().ToString();
 
             using (var DB = new BloggingContext())
             {
                 var B = DB.Blogs.Add(new Blog { BlogID = BlogID });
 
-                B.AuthorID = Guid.NewGuid().ToString();
+                B.AuthorID = AuthorID;
                 B.Url = "SomeURL";
+                B.TestIndex = "testing16";
 
                 await DB.SaveChangesAsync();
             }
 
-            using (var DB = new BloggingContext())
-            {
-                var B = await DB.Blogs.GetByIDAsync(BlogID);
-                // DB.Blogs.Items[BlogID].HardDelete();
+            //using (var DB = new BloggingContext())
+            //{
+            //    var B = await DB.Blogs.GetByIDAsync(BlogID);
+            //    // DB.Blogs.Items[BlogID].HardDelete();
 
-                B.HardDelete();
-                await DB.SaveChangesAsync();
-            }
+            //    if (B is object)
+            //    {
+            //        B.HardDelete();
+            //        await DB.SaveChangesAsync();
+            //    }
+            //}
         }
     }
 }
