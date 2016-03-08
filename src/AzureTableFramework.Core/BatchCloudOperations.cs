@@ -71,7 +71,7 @@ namespace AzureTableFramework.Core
 
                 if (primaryItemTable != null)
                 {
-                    var otherPrimaryItemsWithTheSameRowKey = await dictionary.GetAllByIDAsync(ItemRowKeyValue);
+                    var otherPrimaryItemsWithTheSameRowKey = await dictionary.GetAllByRowKeyAsync(ItemRowKeyValue);
                     foreach (var found in otherPrimaryItemsWithTheSameRowKey.AsNotNull())
                         if (ItemPartitionKeyValue != Utils.GetPartitionKeyValue(found, false))
                             primaryItemsToDelete.Add(found);

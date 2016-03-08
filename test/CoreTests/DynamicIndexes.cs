@@ -1,7 +1,10 @@
-﻿using Samples.Common;
+﻿using AzureTableFramework.Core;
+using Microsoft.WindowsAzure.Storage.Table;
+using Samples.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -17,12 +20,49 @@ namespace CoreTests
 
             using (var DB = new BloggingContext())
             {
-                var B = DB.Comments.Add(new Comment { CommentID = CommentID });
+                var C = DB.Comments.Add(new Comment { CommentID = CommentID });
 
-                B.UserID = UserID;
-                B.PostID = "TestPostID";
+                C.UserID = UserID;
+                C.PostID = "TestPostID";
 
                 await DB.SaveChangesAsync();
+            }
+        }
+
+        [Fact]
+        public async Task QueryObjectFromLongNamedDynamicIndexByLastUpdated()
+        {
+            var UserID = "11111111-1111-1111-1111-111111111112-11111111-1111-1111-1111-111111111112"; //Guid.NewGuid().ToString(); //
+
+            using (var DB = new BloggingContext())
+            {
+                var C = new Comment() { UserID = UserID };
+
+                var query = await DB.Comments.DynamicIndexQueryAsync(C, "LastUpdated", new TimeSpan(-1, 0, 0), null);
+
+                foreach (var item in query.Results)
+                    Debug.WriteLine("item.PartitionKey: " + item.PartitionKey);
+            }
+        }
+
+        [Fact]
+        public async Task QueryObjectFromLongNamedDynamicIndex()
+        {
+            var UserID = "11111111-1111-1111-1111-111111111112-11111111-1111-1111-1111-111111111112"; //Guid.NewGuid().ToString(); //
+
+            using (var DB = new BloggingContext())
+            {
+                var C = new Comment() { UserID = UserID };
+
+                var TFM = Utils.TicksFromMax(DateTime.UtcNow.AddHours(-1)); //"8587441410988915797"; //
+                var FS = Utils.FilterString("PartitionKey", QueryComparisons.LessThanOrEqual, TFM);
+
+                var query = await DB.Comments.DynamicIndexQueryAsync(C, FS, "LastUpdated", null);
+
+                Assert.True(query.Results.Count > 1);
+
+                foreach (var item in query.Results)
+                    Console.WriteLine("item.PartitionKey: " + item.PartitionKey);
             }
         }
 

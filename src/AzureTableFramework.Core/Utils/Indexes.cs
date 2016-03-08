@@ -41,22 +41,26 @@ namespace AzureTableFramework.Core
 
         private static string indexSeparator = "Idx";
 
-        public static string IndexTableName(string objectName, string indexPropertyName)
+        public static string IndexTableName(string objName, string indexPropertyName)
         {
-            var S = $"{objectName}{indexSeparator}{indexPropertyName}".LettersAndNumbersOnly();
+            var S = $"{objName}{indexSeparator}{indexPropertyName}".LettersAndNumbersOnly();
             if (S.Length <= 63) return S;
-            if (S.Length > 63) return S.Substring(0, 63);
-            return S;
+
+            var hash = Hash(Encoding.ASCII.GetBytes(indexPropertyName), (uint)objName.Length).ToString();
+            var hashedName = $"{objName}{indexSeparator}{hash}";
+            if (hashedName.Length > 63) return hashedName.Substring(0, 63);
+
+            return hashedName;
         }
 
-        public static string IndexTableName<T>(T obj, List<string> tableNameProperties)
+        public static string IndexTableName<T>(T obj, List<string> propertyValueNames)
         {
             var itemName = obj.GetType().Name.CharactersOnly();
             var propStr = "";
 
             var objProps = obj.GetType().GetProperties();
 
-            foreach (var prop in tableNameProperties)
+            foreach (var prop in propertyValueNames)
             {
                 propStr = propStr + prop;
                 foreach (var propinfo in objProps)
@@ -70,7 +74,7 @@ namespace AzureTableFramework.Core
 
             propStr = "";
             var valStr = "";
-            foreach (var prop in tableNameProperties)
+            foreach (var prop in propertyValueNames)
             {
                 propStr = propStr + prop;
                 foreach (var propinfo in objProps)
