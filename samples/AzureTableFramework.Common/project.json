@@ -1,7 +1,7 @@
 {
   "version": "1.0.0-*",
   "description": "AzureTableFramework.Common Class Library",
-  "authors": [ "yahug" ],
+  "authors": [ "Jeff Hughes" ],
   "tags": [ "" ],
   "projectUrl": "",
   "licenseUrl": "",

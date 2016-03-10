@@ -1,5 +1,6 @@
 ﻿using AzureTableFramework.Core;
 using Microsoft.WindowsAzure.Storage.Table;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,6 +11,7 @@ namespace Samples.Common
         public AzureTableDictionary<Blog> Blogs { get; set; }
         public AzureTableDictionary<Post> Posts { get; set; }
         public AzureTableDictionary<Comment> Comments { get; set; }
+        public AzureTableDictionary<CommentImage> CommentImages { get; set; }
 
         public BloggingContext()
         {
@@ -84,5 +86,41 @@ namespace Samples.Common
         {
             get { return Utils.TicksFromMax(Timestamp.UtcDateTime); }
         }
+    }
+
+    public class CommentImage : AzureTableEntity
+    {
+        [PartitionKey]
+        public string CommentID { get; set; }
+
+        public string CommentImageID { get; set; }
+
+        [Blob("jpg"), IgnoreProperty, Eager]
+        public Byte[] Picture { get; set; }
+
+        [Blob, IgnoreProperty]
+        public Byte[] Picture1 { get; set; }
+
+        public BlobData Picture1BlobData { get; set; }
+
+        [Blob, IgnoreProperty]
+        public Byte[] Picture2 { get; set; }
+
+        [BlobData("Picture2")]
+        public BlobData PictureUnspecifiedByNameBlobData { get; set; }
+
+        [Blob("image/jpg", "jpg"), IgnoreProperty]
+        public Byte[] Picture3 { get; set; }
+    }
+
+    public class CommentFile : AzureTableEntity
+    {
+        [PartitionKey]
+        public string CommentID { get; set; }
+
+        public string CommentFileID { get; set; }
+
+        [Blob("html"), Eager]
+        public Byte[] Html { get; set; }
     }
 }

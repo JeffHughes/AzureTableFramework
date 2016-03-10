@@ -65,6 +65,19 @@ namespace AzureTableFramework.Core
             return items;
         }
 
+        public async Task<T> Prep(T item)
+        {
+            Add(item);
+            await Utils.LoadEagerBlobs(item, _AzureTablesContext.PrimaryStorageAccount());
+            return item;
+        }
+
+        public async Task<List<T>> Prep(List<T> items)
+        {
+            foreach (var item in items) await Prep(item);
+            return items;
+        }
+
         /// <summary>
         /// Creates a new item, generates a guid for the ID and adds it to the list
         /// </summary>

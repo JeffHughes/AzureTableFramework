@@ -22,7 +22,7 @@ namespace AzureTableFramework.Core
             var data = await QueryAsync(tq, null);
 
             if (hasResults(data))
-                return Utils.DynamicResultsToTypedList<T, T>(data.Results).FirstOrDefault();
+                return await Prep(Utils.DynamicResultsToTypedList<T, T>(data.Results).FirstOrDefault());
 
             return default(T);
         }
@@ -55,10 +55,10 @@ namespace AzureTableFramework.Core
 
         public async Task<List<T>> DataQueryAsync(string FilterString)
         {
-            var data = await QueryAsync(FilterString, null);
+            var data = await QueryAllAsync(FilterString);
 
             if (hasResults(data))
-                return Utils.DynamicResultsToTypedList<T, T>(data.Results);
+                return await Prep(Utils.DynamicResultsToTypedList<T, T>(data.Results));
 
             return null;
         }

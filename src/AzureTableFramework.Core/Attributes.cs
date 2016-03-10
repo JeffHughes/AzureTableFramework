@@ -40,7 +40,9 @@ namespace AzureTableFramework.Core
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public class BlobAttribute : Attribute
     {
-        public string FileExtension { get; set; }
+        public string FileNameWithoutExtension { get; set; }
+        public string FileExtension { get; set; } = "txt";
+        public string MimeType { get; set; } = "Application";
 
         public BlobAttribute()
         {
@@ -49,8 +51,49 @@ namespace AzureTableFramework.Core
         public BlobAttribute(string ext)
         {
             FileExtension = ext;
+            // MimeType = BlobData.MIMETypes[ext];
+        }
+
+        public BlobAttribute(string type, string ext)
+        {
+            MimeType = type;
+            FileExtension = ext;
+        }
+
+        public BlobAttribute(string type, string fileNameWithoutExtension, string ext)
+        {
+            MimeType = type;
+            FileNameWithoutExtension = fileNameWithoutExtension;
+            FileExtension = ext;
         }
     }
+
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    public class BlobDataAttribute : Attribute
+    {
+        public string TargetProperty { get; set; }
+
+        public BlobDataAttribute()
+        {
+        }
+
+        public BlobDataAttribute(string targetProperty)
+        {
+            TargetProperty = targetProperty;
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    public class EagerAttribute : Attribute
+    { }
+
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    public class EagerLoadAttribute : Attribute
+    { }
+
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    public class EagerLoadAllBlobsAttribute : Attribute
+    { }
 
     /*
     [AttributeUsage(AttributeTargets.Class)]

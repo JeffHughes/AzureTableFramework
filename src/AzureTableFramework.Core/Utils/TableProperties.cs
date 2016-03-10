@@ -214,6 +214,9 @@ namespace AzureTableFramework.Core
                     foreach (var p in ((dynamic)obj1).Properties)
                         Utils.SetVal(obj, p.Key, p.Value.PropertyAsObject);
 
+                ///TODO: uncomment
+               // Utils.LoadSelectedBlobs(obj);
+
                 ConvertedResults.Add(obj);
             }
 

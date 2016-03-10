@@ -133,7 +133,7 @@ namespace AzureTableFramework.Core
                 CheckRequiredFields(item);
                 //(item as AzureTableEntity).Timestamp = _timestamp;
 
-                await ProcessBlobs(item, false);
+                await Utils.SaveBlobs(item, PrimaryStorageAccount());
             }
 
             var results = await BatchCloudTableOperation(typeof(T).Name, PrimaryStorageAccount(),
@@ -179,7 +179,7 @@ namespace AzureTableFramework.Core
             // if (!list.Any()) return 0;
 
             foreach (var item in list)
-                await ProcessBlobs(item, true);
+                await Utils.DeleteBlobs(item, PrimaryStorageAccount());
 
             //foreach (var item in list)
             //{
@@ -216,7 +216,7 @@ namespace AzureTableFramework.Core
             foreach (var item in list)
             {
                 dictionary.Items.Remove(Utils.GetRowKeyValue(item));
-                await ProcessBlobs(item, true);
+                await Utils.DeleteBlobs(item, PrimaryStorageAccount());
             }
 
             var Indexes = Utils.GetIndexes(results);
@@ -302,38 +302,6 @@ namespace AzureTableFramework.Core
         {
             foreach (var x in typeof(T).GetProperties().Where(x => x.GetCustomAttributes(typeof(RequiredAttribute), false).Any()))
                 if (x.GetValue(obj) == null) throw new Exception($"Required field {x.Name} on {typeof(T).Name} with ID of {Utils.GetRowKeyValue(obj)} is Null or Empty");
-        }
-
-        private async Task ProcessBlobs<T>(T obj, bool Delete)
-        {
-            foreach (var x in typeof(T).GetProperties().Where(x => x.GetCustomAttributes(typeof(BlobAttribute), false).Any()))
-            {
-                var RowKey = Utils.GetRowKeyValue(obj);
-                var Extension = ((BlobAttribute)x.GetCustomAttribute(typeof(BlobAttribute), false)).FileExtension;
-
-                var CBB = (await Utils.BlobContainerAsync(nameof(obj), PrimaryStorageAccount()))
-                                        .GetBlockBlobReference($"{x.Name}/{RowKey}.{Extension}");
-                if (Delete)
-                {
-                    await Utils.DeleteBlobContentAsync(CBB);
-                    x.SetValue(obj, null);
-                }
-                else {
-                    await Utils.SaveBlobContentAsync(CBB, x.GetValue(obj), RowKey, Extension);
-                }
-            }
-        }
-
-        private async Task DeleteBlobs<T>(T obj)
-        {
-            foreach (var x in typeof(T).GetProperties().Where(x => x.GetCustomAttributes(typeof(BlobAttribute), false).Any()))
-            {
-                var RowKey = Utils.GetRowKeyValue(obj);
-                var Extension = ((BlobAttribute)x.GetCustomAttribute(typeof(BlobAttribute), false)).FileExtension;
-
-                var CBB = (await Utils.BlobContainerAsync(nameof(obj), PrimaryStorageAccount()))
-                            .GetBlockBlobReference($"{x.Name}/{RowKey}.{Extension}");
-            }
         }
 
         public void Dispose()

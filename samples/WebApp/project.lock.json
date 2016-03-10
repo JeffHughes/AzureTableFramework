@@ -21,6 +21,7 @@
           "System.Collections.Immutable": "1.1.37",
           "System.Linq.Parallel": "4.0.1-beta-23516",
           "System.Linq.Queryable": "4.0.1-beta-23516",
+          "System.Net.Http": "4.0.1-beta-23516",
           "System.Reflection": "4.1.0-beta-23516",
           "System.Reflection.Extensions": "4.0.1-beta-23516",
           "WindowsAzure.Storage": "6.2.2-preview"
@@ -2100,6 +2101,18 @@
       },
       "System.Linq.Queryable/4.0.1-beta-23516": {
         "type": "package",
+        "compile": {
+          "ref/net45/_._": {}
+        },
+        "runtime": {
+          "lib/net45/_._": {}
+        }
+      },
+      "System.Net.Http/4.0.1-beta-23516": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System.Net.Http"
+        ],
         "compile": {
           "ref/net45/_._": {}
         },
@@ -5377,6 +5390,7 @@
           "System.Collections.Immutable": "1.1.37",
           "System.Linq.Parallel": "4.0.1-beta-23516",
           "System.Linq.Queryable": "4.0.1-beta-23516",
+          "System.Net.Http": "4.0.1-beta-23516",
           "System.Reflection": "4.1.0-beta-23516",
           "System.Reflection.Extensions": "4.0.1-beta-23516",
           "WindowsAzure.Storage": "6.2.2-preview"
@@ -7361,6 +7375,12 @@
           "lib/net45/Remotion.Linq.dll": {}
         }
       },
+      "runtime.win7.System.Net.Http/4.0.1-beta-23516": {
+        "type": "package",
+        "compile": {
+          "ref/dotnet/_._": {}
+        }
+      },
       "System.Collections/4.0.0": {
         "type": "package",
         "compile": {
@@ -7459,6 +7479,18 @@
       },
       "System.Linq.Queryable/4.0.1-beta-23516": {
         "type": "package",
+        "compile": {
+          "ref/net45/_._": {}
+        },
+        "runtime": {
+          "lib/net45/_._": {}
+        }
+      },
+      "System.Net.Http/4.0.1-beta-23516": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System.Net.Http"
+        ],
         "compile": {
           "ref/net45/_._": {}
         },
@@ -7668,6 +7700,7 @@
           "System.Collections.Immutable": "1.1.37",
           "System.Linq.Parallel": "4.0.1-beta-23516",
           "System.Linq.Queryable": "4.0.1-beta-23516",
+          "System.Net.Http": "4.0.1-beta-23516",
           "System.Reflection": "4.1.0-beta-23516",
           "System.Reflection.Extensions": "4.0.1-beta-23516",
           "WindowsAzure.Storage": "6.2.2-preview"
@@ -9652,6 +9685,12 @@
           "lib/net45/Remotion.Linq.dll": {}
         }
       },
+      "runtime.win7.System.Net.Http/4.0.1-beta-23516": {
+        "type": "package",
+        "compile": {
+          "ref/dotnet/_._": {}
+        }
+      },
       "System.Collections/4.0.0": {
         "type": "package",
         "compile": {
@@ -9750,6 +9789,18 @@
       },
       "System.Linq.Queryable/4.0.1-beta-23516": {
         "type": "package",
+        "compile": {
+          "ref/net45/_._": {}
+        },
+        "runtime": {
+          "lib/net45/_._": {}
+        }
+      },
+      "System.Net.Http/4.0.1-beta-23516": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System.Net.Http"
+        ],
         "compile": {
           "ref/net45/_._": {}
         },

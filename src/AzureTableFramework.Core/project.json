@@ -1,13 +1,14 @@
 {
   "version": "1.0.0-*",
   "description": "AzureTableFramework.Core Class Library",
-  "authors": [ "yahug" ],
+  "authors": [ "Jeff Hughes" ],
   "tags": [ "" ],
-  "projectUrl": "",
+  "projectUrl": "http://AzureTableFramework.net",
   "licenseUrl": "",
   "frameworks": {
     "net451": {
       "dependencies": {
+        "System.Net.Http": "4.0.1-beta-23516",
         "System.Reflection": "4.1.0-beta-23516",
         "System.Reflection.Extensions": "4.0.1-beta-23516"
       },
@@ -26,7 +27,7 @@
     }
   },
   "dependencies": {
-    "AutoMapper": "4.1.1",
+  "AutoMapper": "4.1.1",
     "Microsoft.Extensions.Configuration.Abstractions": "1.0.0-rc1-final",
     "System.Collections.Immutable": "1.1.37",
     "System.Linq.Parallel": "4.0.1-beta-23516",
