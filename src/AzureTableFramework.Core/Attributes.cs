@@ -40,46 +40,22 @@ namespace AzureTableFramework.Core
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public class BlobAttribute : Attribute
     {
-        public string FileNameWithoutExtension { get; set; }
-        public string FileExtension { get; set; } = "txt";
-        public string MimeType { get; set; } = "Application";
+        public string FileExtension { get; set; }
+        public string MimeType { get; set; }
 
         public BlobAttribute()
         {
         }
 
-        public BlobAttribute(string ext)
+        public BlobAttribute(string fileExtension)
         {
-            FileExtension = ext;
-            // MimeType = BlobData.MIMETypes[ext];
+            FileExtension = fileExtension;
         }
 
-        public BlobAttribute(string type, string ext)
+        public BlobAttribute(string fileExtension, string mimeType)
         {
-            MimeType = type;
-            FileExtension = ext;
-        }
-
-        public BlobAttribute(string type, string fileNameWithoutExtension, string ext)
-        {
-            MimeType = type;
-            FileNameWithoutExtension = fileNameWithoutExtension;
-            FileExtension = ext;
-        }
-    }
-
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public class BlobDataAttribute : Attribute
-    {
-        public string TargetProperty { get; set; }
-
-        public BlobDataAttribute()
-        {
-        }
-
-        public BlobDataAttribute(string targetProperty)
-        {
-            TargetProperty = targetProperty;
+            FileExtension = fileExtension;
+            MimeType = mimeType;
         }
     }
 

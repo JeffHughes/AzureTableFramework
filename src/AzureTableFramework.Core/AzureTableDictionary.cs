@@ -68,7 +68,7 @@ namespace AzureTableFramework.Core
         public async Task<T> Prep(T item)
         {
             Add(item);
-            await Utils.LoadEagerBlobs(item, _AzureTablesContext.PrimaryStorageAccount());
+            //await Utils.LoadEagerBlobs(item, _AzureTablesContext.PrimaryStorageAccount());
             return item;
         }
 

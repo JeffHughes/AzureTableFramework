@@ -80,6 +80,8 @@ namespace Samples.Common
 
         public string UserID { get; set; }
 
+        public Blob CommentHtml { get; set; } = new Blob("html");
+
         [DynamicIndex("UserID")]
         [IgnoreProperty]
         public new string LastUpdated
@@ -95,32 +97,6 @@ namespace Samples.Common
 
         public string CommentImageID { get; set; }
 
-        [Blob("jpg"), IgnoreProperty, Eager]
-        public Byte[] Picture { get; set; }
-
-        [Blob, IgnoreProperty]
-        public Byte[] Picture1 { get; set; }
-
-        public BlobData Picture1BlobData { get; set; }
-
-        [Blob, IgnoreProperty]
-        public Byte[] Picture2 { get; set; }
-
-        [BlobData("Picture2")]
-        public BlobData PictureUnspecifiedByNameBlobData { get; set; }
-
-        [Blob("image/jpg", "jpg"), IgnoreProperty]
-        public Byte[] Picture3 { get; set; }
-    }
-
-    public class CommentFile : AzureTableEntity
-    {
-        [PartitionKey]
-        public string CommentID { get; set; }
-
-        public string CommentFileID { get; set; }
-
-        [Blob("html"), Eager]
-        public Byte[] Html { get; set; }
+        public Blob Image { get; set; } = new Blob();
     }
 }

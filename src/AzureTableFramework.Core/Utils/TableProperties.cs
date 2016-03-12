@@ -72,8 +72,7 @@ namespace AzureTableFramework.Core
 
         public static string GetRowKeyValue(Object obj)
         {
-            var type = obj.GetType();
-            var RowKeyPropertyName = GetRowKeyPropertyName(type);
+            var RowKeyPropertyName = GetRowKeyPropertyName(obj.GetType());
             var RK = "";
 
             var PossiblyNullObject = Utils.GetVal(obj, RowKeyPropertyName);

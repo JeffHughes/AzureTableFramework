@@ -13,65 +13,26 @@ namespace CoreTests
 {
     public class Blobs
     {
-        [Fact]
+        // await I.Comment.Save(DB.PrimaryStorageAccount(), "This is a test for comment");
+
         public async Task SaveSimpleBlob()
         {
             var url = "http://2016tempdata2.azurewebsites.net/images/header_round_avatar50.png";
             byte[] result = await new HttpClient().GetByteArrayAsync(new Uri(url));
 
-            using (var DB = new BloggingContext())
-            {
-                var I = new CommentImage()
-                {
-                    CommentID = "1",
-                    Picture = result
-                };
-
-                DB.CommentImages.Add(I);
-
-                await DB.SaveChangesAsync();
-            }
-        }
-
-        [Fact]
-        public async Task BlobWithNamedBlobData()
-        {
-            var url = "http://2016tempdata2.azurewebsites.net/images/header_round_avatar50.png";
-            byte[] result = await new HttpClient().GetByteArrayAsync(new Uri(url));
+            if (result == null) throw new Exception("couldn't download image!");
 
             using (var DB = new BloggingContext())
             {
-                var I = new CommentImage()
-                {
-                    CommentID = "1",
-                    Picture1 = result,
-                    Picture1BlobData = new BlobData { FileExtension = "png" }
-                };
+                var I = new CommentImage() { CommentID = "Testing" };
 
                 DB.CommentImages.Add(I);
 
-                await DB.SaveChangesAsync();
-            }
-        }
-
-        [Fact]
-        public async Task BlobWithTargetedBlobData()
-        {
-            var url = "http://2016tempdata2.azurewebsites.net/images/header_round_avatar50.png";
-            byte[] result = await new HttpClient().GetByteArrayAsync(new Uri(url));
-
-            using (var DB = new BloggingContext())
-            {
-                var I = new CommentImage()
-                {
-                    CommentID = "1",
-                    Picture2 = result,
-                    PictureUnspecifiedByNameBlobData = new BlobData { FileExtension = ".png" }
-                };
-
-                DB.CommentImages.Add(I);
+                await I.Image.Save(DB.PrimaryStorageAccount(), result);
 
                 await DB.SaveChangesAsync();
+
+                Debug.WriteLine((await I.Image.GetCBB(DB.PrimaryStorageAccount())).Uri);
             }
         }
 
@@ -80,9 +41,11 @@ namespace CoreTests
         {
             using (var DB = new BloggingContext())
             {
-                var I = await DB.CommentImages.GetByIDAsync("2d2979a2-1853-4c52-823b-ac130dba3358");
+                var I = await DB.CommentImages.GetByIDAsync("223abb96-bd39-4f07-9155-2107c967183d");
 
-                Debug.WriteLine(I.Picture.ToString());
+                var AvatarCBB = await I.Avatar.GetCBB(DB.PrimaryStorageAccount());
+
+                Debug.WriteLine("AvatarCBB.Uri: " + AvatarCBB.Uri);
             }
         }
     }

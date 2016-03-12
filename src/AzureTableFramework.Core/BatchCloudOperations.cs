@@ -133,7 +133,7 @@ namespace AzureTableFramework.Core
                 CheckRequiredFields(item);
                 //(item as AzureTableEntity).Timestamp = _timestamp;
 
-                await Utils.SaveBlobs(item, PrimaryStorageAccount());
+                //await Utils.SaveBlobs(item, PrimaryStorageAccount());
             }
 
             var results = await BatchCloudTableOperation(typeof(T).Name, PrimaryStorageAccount(),
@@ -178,8 +178,8 @@ namespace AzureTableFramework.Core
         {
             // if (!list.Any()) return 0;
 
-            foreach (var item in list)
-                await Utils.DeleteBlobs(item, PrimaryStorageAccount());
+            //foreach (var item in list)
+            //    await Utils.DeleteBlobs(item, PrimaryStorageAccount());
 
             //foreach (var item in list)
             //{
@@ -216,7 +216,7 @@ namespace AzureTableFramework.Core
             foreach (var item in list)
             {
                 dictionary.Items.Remove(Utils.GetRowKeyValue(item));
-                await Utils.DeleteBlobs(item, PrimaryStorageAccount());
+                //await Utils.DeleteBlobs(item, PrimaryStorageAccount());
             }
 
             var Indexes = Utils.GetIndexes(results);
