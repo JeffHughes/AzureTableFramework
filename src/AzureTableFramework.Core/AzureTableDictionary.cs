@@ -55,10 +55,19 @@ namespace AzureTableFramework.Core
 
             if (Items.ContainsKey(key)) Items.Remove(key);
 
+            var ATE = (item as AzureTableEntity);
+            ATE.DefaultStorageAccount = _AzureTablesContext.PrimaryStorageAccount();
+            ATE.init();
+
             Items.Add(key, item);
             return item;
         }
 
+        /// <summary>
+        /// Adds a group of items to a list and returns the entire new list
+        /// </summary>
+        /// <param name="items"></param>
+        /// <returns></returns>
         public List<T> Add(List<T> items)
         {
             foreach (var item in items) Add(item);
@@ -68,7 +77,7 @@ namespace AzureTableFramework.Core
         public async Task<T> Prep(T item)
         {
             Add(item);
-            //await Utils.LoadEagerBlobs(item, _AzureTablesContext.PrimaryStorageAccount());
+            //
             return item;
         }
 

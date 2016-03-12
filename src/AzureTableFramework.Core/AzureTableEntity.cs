@@ -1,4 +1,6 @@
-﻿using Microsoft.WindowsAzure.Storage.Table;
+﻿using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Table;
+using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -8,6 +10,9 @@ namespace AzureTableFramework.Core
 {
     public class AzureTableEntity : TableEntity
     {
+        [JsonIgnore]
+        public CloudStorageAccount DefaultStorageAccount { get; set; }
+
         public AzureTableEntity()
         {
             init();
@@ -34,18 +39,6 @@ namespace AzureTableFramework.Core
 
                 if (string.IsNullOrEmpty(bp.PropertyName))
                     bp.PropertyName = item.Name;
-
-                Debug.WriteLine("blob.PropertyName: " + bp.PropertyName);
-
-                var blobAttr = (BlobAttribute)item.GetCustomAttribute(typeof(BlobAttribute), false);
-                if (blobAttr != null)
-                {
-                    if (string.IsNullOrEmpty(bp.FileExtension))
-                        bp.FileExtension = blobAttr.FileExtension;
-
-                    if (string.IsNullOrEmpty(bp.MimeType))
-                        bp.MimeType = blobAttr.MimeType;
-                }
             }
         }
 

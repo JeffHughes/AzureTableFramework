@@ -64,22 +64,38 @@ namespace AzureTableFramework.Core
             return null;
         }
 
+        public static async Task DeleteBlobs(object obj, CloudStorageAccount AzureStorageAccount)
+        {
+            var container = await BlobContainer(obj, AzureStorageAccount);
+
+            foreach (var BI in (await Blobs(obj, AzureStorageAccount)).Values)
+            {
+                var fullPath = BI.Uri.LocalPath;
+                var pathPrefix = $"/{obj.GetType().Name.ToLower()}/";
+                var relPath = fullPath.Replace(pathPrefix, "");
+
+                var CBB = container.GetBlockBlobReference(relPath);
+                await CBB.DeleteIfExistsAsync();
+            }
+        }
+
+        public static async Task DeleteBlob(CloudBlockBlob CBB)
+        {
+            await CBB.DeleteIfExistsAsync();
+        }
+
         public static async Task SaveBlob(CloudBlockBlob CBB, object Content, string mimeType, string filenameWithoutExtension, string extension)
         {
-            // if (string.IsNullOrEmpty(extension)) { throw new Exception("extension required"); }
-
             switch (Content.GetType().ToString().Replace("System.", ""))
             {
                 case "Byte[]":
-                    if (((byte[])Content).Any())
-                        await CBB.UploadFromByteArrayAsync((byte[])Content, 0, ((byte[])Content).Length, null, null, null);
-                    else return;
+                    if (!((byte[])Content).Any()) return;
+                    await CBB.UploadFromByteArrayAsync((byte[])Content, 0, ((byte[])Content).Length, null, null, null);
                     break;
 
                 default:
-                    if (!string.IsNullOrEmpty((string)Content))
-                        await CBB.UploadTextAsync((string)Content);
-                    else return;
+                    if (string.IsNullOrEmpty((string)Content)) return;
+                    await CBB.UploadTextAsync((string)Content);
                     break;
             }
 
@@ -92,20 +108,19 @@ namespace AzureTableFramework.Core
             if (!string.IsNullOrEmpty(mimeType) || !string.IsNullOrEmpty(extension))
                 await CBB.SetPropertiesAsync();
         }
-
-        public static async Task DeleteBlob(CloudBlockBlob CBB)
-        {
-            await CBB.DeleteIfExistsAsync();
-        }
     }
 
     public class Blob
     {
         private object _CallingObject;
-        private string _FileNameWithoutExtension = "";
-        private string _MimeType = "";
+
         private string _FileExtension = "";
-        private Type _type;
+
+        private string _FileNameWithoutExtension = "";
+
+        private string _MimeType = "";
+
+        //private Type _type;
 
         public Blob()
         {
@@ -116,86 +131,11 @@ namespace AzureTableFramework.Core
             FileExtension = extension;
         }
 
-        public Blob(Type type, string extension)
-        {
-            _type = type;
-            FileExtension = extension;
-        }
-
-        public async Task Save(CloudStorageAccount AzureStorageAccount, object Content)
-        {
-            if (this == null)
-            {
-                throw new Exception("you must instantiate!!!");
-            }
-
-            if (string.IsNullOrEmpty(FileExtension))
-            {
-                switch (Content.GetType().ToString().Replace("System.", ""))
-                {
-                    case "Byte[]":
-                        //Throw error???
-                        break;
-
-                    default:
-                        FileExtension = "txt";
-                        break;
-                }
-            }
-
-            var CBB = await CreateCBB(AzureStorageAccount);
-
-            if (String.IsNullOrEmpty(MimeType)) _MimeType = "";
-            if (String.IsNullOrEmpty(FileNameWithoutExtension)) _FileNameWithoutExtension = "";
-            if (String.IsNullOrEmpty(FileExtension)) _FileExtension = "";
-
-            await Utils.SaveBlob(CBB, Content, MimeType, FileNameWithoutExtension, FileExtension);
-        }
-
-        public async Task<object> Get(CloudStorageAccount AzureStorageAccount)
-        {
-            var CBB = await GetCBB(AzureStorageAccount);
-            if (!await CBB.ExistsAsync()) return null;
-
-            if (CBB.Properties.ContentType.Contains("text"))
-                return await CBB.DownloadTextAsync();
-
-            var ba = new byte[] { };
-            await CBB.DownloadToByteArrayAsync(ba, 0);
-            return ba;
-        }
-
-        public async Task<Uri> GetUri(CloudStorageAccount AzureStorageAccount)
-        {
-            var CBB = await GetCBB(AzureStorageAccount);
-            return CBB.Uri;
-        }
-
-        [JsonIgnore]
-        public object CallingObject
-        {
-            get
-            {
-                try
-                {
-                    if (_CallingObject is object)
-                        RowKey = Utils.GetRowKeyValue(_CallingObject);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(" error on set RK value from Blob CallingObject, message: " + ex.Message);
-                }
-                return _CallingObject;
-            }
-            set
-            {
-                _CallingObject = value;
-            }
-        }
-
-        public string RowKey { get; set; }
-
-        public string PropertyName { get; set; }
+        //public Blob(Type type, string extension)
+        //{
+        //    _type = type;
+        //    FileExtension = extension;
+        //}
 
         public string BlobPath
         {
@@ -205,43 +145,31 @@ namespace AzureTableFramework.Core
             }
         }
 
-        public async Task<CloudBlockBlob> CreateCBB(CloudStorageAccount AzureStorageAccount)
-        {
-            return await CreateCloudBlockBlobReference(AzureStorageAccount);
-        }
-
-        public async Task<CloudBlockBlob> CreateCloudBlockBlobReference(CloudStorageAccount AzureStorageAccount)
-        {
-            var container = await Utils.BlobContainer(CallingObject, AzureStorageAccount);
-            return container.GetBlockBlobReference(BlobPath);
-        }
-
-        public async Task<CloudBlockBlob> GetCBB(CloudStorageAccount AzureStorageAccount)
-        {
-            return await GetCloudBlockBlobreference(AzureStorageAccount);
-        }
-
-        public async Task<CloudBlockBlob> GetCloudBlockBlobreference(CloudStorageAccount AzureStorageAccount)
-        {
-            var container = await Utils.BlobContainer(CallingObject, AzureStorageAccount);
-            var b = container.GetBlockBlobReference(BlobPath);
-            await b.FetchAttributesAsync();
-            return b;
-        }
-
-        public string MimeType
+        [JsonIgnore]
+        public object CallingObject
         {
             get
             {
-                if (string.IsNullOrEmpty(_MimeType))
-                    if (MIMETypes.ContainsKey(FileExtension))
-                        _MimeType = MIMETypes[FileExtension];
+                if (_CallingObject is object)
+                    RowKey = Utils.GetRowKeyValue(_CallingObject);
 
-                return _MimeType;
+                return _CallingObject;
             }
             set
             {
-                _MimeType = value;
+                _CallingObject = value;
+            }
+        }
+
+        public string FileExtension
+        {
+            get
+            {
+                return _FileExtension;
+            }
+            set
+            {
+                _FileExtension = value.Trim().TrimStart('.');
             }
         }
 
@@ -260,16 +188,142 @@ namespace AzureTableFramework.Core
             }
         }
 
-        public string FileExtension
+        public string MimeType
         {
             get
             {
-                return _FileExtension;
+                if (string.IsNullOrEmpty(_MimeType))
+                    if (MIMETypes.ContainsKey(FileExtension))
+                        _MimeType = MIMETypes[FileExtension];
+
+                return _MimeType;
             }
             set
             {
-                _FileExtension = value.Trim().TrimStart('.');
+                _MimeType = value;
             }
+        }
+
+        public string PropertyName { get; set; }
+
+        public string RowKey { get; set; }
+
+        public async Task<CloudBlockBlob> CreateCBB()
+        {
+            return await CreateCBB((CallingObject as AzureTableEntity).DefaultStorageAccount);
+        }
+
+        public async Task<CloudBlockBlob> CreateCBB(CloudStorageAccount AzureStorageAccount)
+        {
+            return await CreateCloudBlockBlobReference(AzureStorageAccount);
+        }
+
+        public async Task<CloudBlockBlob> CreateCloudBlockBlobReference()
+        {
+            return await CreateCBB();
+        }
+
+        public async Task<CloudBlockBlob> CreateCloudBlockBlobReference(CloudStorageAccount AzureStorageAccount)
+        {
+            var container = await Utils.BlobContainer(CallingObject, AzureStorageAccount);
+            return container.GetBlockBlobReference(BlobPath);
+        }
+
+        public async Task DeleteData()
+        {
+            var cbb = await CreateCBB();
+            await cbb.DeleteIfExistsAsync();
+        }
+
+        public async Task DeleteData(CloudStorageAccount AzureStorageAccount)
+        {
+            var cbb = await CreateCBB(AzureStorageAccount);
+            await cbb.DeleteIfExistsAsync();
+        }
+
+        public async Task GetData()
+        {
+            await GetData((CallingObject as AzureTableEntity).DefaultStorageAccount);
+        }
+
+        public async Task<object> GetData(CloudStorageAccount AzureStorageAccount)
+        {
+            var CBB = await GetCBB(AzureStorageAccount);
+            if (!await CBB.ExistsAsync()) return null;
+
+            if (CBB.Properties.ContentType.Contains("text"))
+                return await CBB.DownloadTextAsync();
+
+            var ba = new byte[] { };
+            await CBB.DownloadToByteArrayAsync(ba, 0);
+            return ba;
+        }
+
+        public async Task<CloudBlockBlob> GetCBB()
+        {
+            return await GetCBB((CallingObject as AzureTableEntity).DefaultStorageAccount);
+        }
+
+        public async Task<CloudBlockBlob> GetCBB(CloudStorageAccount AzureStorageAccount)
+        {
+            return await GetCloudBlockBlobreference(AzureStorageAccount);
+        }
+
+        public async Task<CloudBlockBlob> GetCloudBlockBlobreference()
+        {
+            return await GetCBB();
+        }
+
+        public async Task<CloudBlockBlob> GetCloudBlockBlobreference(CloudStorageAccount AzureStorageAccount)
+        {
+            var container = await Utils.BlobContainer(CallingObject, AzureStorageAccount);
+            var b = container.GetBlockBlobReference(BlobPath);
+
+            if (!(await b.ExistsAsync()))
+                return null;
+
+            await b.FetchAttributesAsync();
+            return b;
+        }
+
+        public async Task<Uri> GetUri()
+        {
+            return await GetUri((CallingObject as AzureTableEntity).DefaultStorageAccount);
+        }
+
+        public async Task<Uri> GetUri(CloudStorageAccount AzureStorageAccount)
+        {
+            var CBB = await GetCBB(AzureStorageAccount);
+            return CBB.Uri;
+        }
+
+        public async Task SaveData(object Content)
+        {
+            await SaveData((CallingObject as AzureTableEntity).DefaultStorageAccount, Content);
+        }
+
+        public async Task SaveData(CloudStorageAccount AzureStorageAccount, object Content)
+        {
+            //if (this == null)
+            //    throw new Exception("you must instantiate blobs '{ get; set; } = new Blob(\"png\");'  ");
+
+            if (string.IsNullOrEmpty(FileExtension))
+            {
+                switch (Content.GetType().ToString().Replace("System.", ""))
+                {
+                    case "Byte[]":
+                        //Throw error???
+                        break;
+
+                    default:
+                        FileExtension = "txt";
+                        break;
+                }
+            }
+
+            var CBB = await CreateCBB(AzureStorageAccount);
+
+            await Utils.SaveBlob(CBB, Content, MimeType, FileNameWithoutExtension, FileExtension);
         }
 
         #region Types

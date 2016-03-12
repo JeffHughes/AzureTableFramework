@@ -15,6 +15,7 @@ namespace CoreTests
     {
         // await I.Comment.Save(DB.PrimaryStorageAccount(), "This is a test for comment");
 
+        [Fact]
         public async Task SaveSimpleBlob()
         {
             var url = "http://2016tempdata2.azurewebsites.net/images/header_round_avatar50.png";
@@ -22,30 +23,37 @@ namespace CoreTests
 
             if (result == null) throw new Exception("couldn't download image!");
 
+            var CommentImageID = Guid.NewGuid().ToString();
+
             using (var DB = new BloggingContext())
             {
-                var I = new CommentImage() { CommentID = "Testing" };
+                var I = new CommentImage() { CommentID = "Testing", CommentImageID = CommentImageID };
 
                 DB.CommentImages.Add(I);
 
-                await I.Image.Save(DB.PrimaryStorageAccount(), result);
+                // await I.Image.Save(DB.PrimaryStorageAccount(), result);
+                I.Image.FileNameWithoutExtension = "Avatar";
+                I.Image.FileExtension = "png";
+                await I.Image.SaveData(result);
 
                 await DB.SaveChangesAsync();
 
-                Debug.WriteLine((await I.Image.GetCBB(DB.PrimaryStorageAccount())).Uri);
-            }
-        }
+                var ImageCBB = await I.Image.GetCBB();
 
-        [Fact]
-        public async Task GetBlob()
-        {
+                if (ImageCBB != null) Debug.WriteLine(ImageCBB.Uri);
+            }
+
             using (var DB = new BloggingContext())
             {
-                var I = await DB.CommentImages.GetByIDAsync("223abb96-bd39-4f07-9155-2107c967183d");
+                var I = await DB.CommentImages.GetByIDAsync(CommentImageID);
 
-                var AvatarCBB = await I.Avatar.GetCBB(DB.PrimaryStorageAccount());
+                var CBB = await I.Image.GetCBB(DB.PrimaryStorageAccount());
 
-                Debug.WriteLine("AvatarCBB.Uri: " + AvatarCBB.Uri);
+                if (CBB != null) Debug.WriteLine(" CBB.Uri: " + CBB.Uri);
+
+                I.HardDelete();
+
+                await DB.SaveChangesAsync();
             }
         }
     }

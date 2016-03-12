@@ -37,40 +37,6 @@ namespace AzureTableFramework.Core
         }
     }
 
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public class BlobAttribute : Attribute
-    {
-        public string FileExtension { get; set; }
-        public string MimeType { get; set; }
-
-        public BlobAttribute()
-        {
-        }
-
-        public BlobAttribute(string fileExtension)
-        {
-            FileExtension = fileExtension;
-        }
-
-        public BlobAttribute(string fileExtension, string mimeType)
-        {
-            FileExtension = fileExtension;
-            MimeType = mimeType;
-        }
-    }
-
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public class EagerAttribute : Attribute
-    { }
-
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public class EagerLoadAttribute : Attribute
-    { }
-
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class EagerLoadAllBlobsAttribute : Attribute
-    { }
-
     /*
     [AttributeUsage(AttributeTargets.Class)]
     public class AzureSearchAttribute : Attribute
