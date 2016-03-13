@@ -15,11 +15,20 @@ namespace Samples.Common
 
         public BloggingContext()
         {
-            PrimaryStorageAccountName = "AzureBlogTest1";
-            PrimaryStorageAccountKey = "u6eGo/IfJ0CaO4gwpDNWeTNwhu6GyThisIsAFakeCodeSBtPCs0okJ9zy3bguKV1oR2Ukqcr7ala6i872A==";
+            //PrimaryStorageAccountName = "AzureBlogTest1";
+            //PrimaryStorageAccountKey = "u6eGo/IfJ0CaO4gwpDNWeTNwhu6GyThisIsAFakeCodeSBtPCs0okJ9zy3bguKV1oR2Ukqcr7ala6i872A==";
 
-            IndexStorageAccountName = "AzureBlogTest1idx";
-            IndexStorageAccountKey = "q0jIB778aJWZMwBgkVIiZ3zypNm/YQjkThisIsAFakeCodekNsyrm4jFGdLhV+EipOPtE+QZJXfSdnXRvMZ8EKw==";
+            //IndexStorageAccountName = "AzureBlogTest1idx";
+            //IndexStorageAccountKey = "q0jIB778aJWZMwBgkVIiZ3zypNm/YQjkThisIsAFakeCodekNsyrm4jFGdLhV+EipOPtE+QZJXfSdnXRvMZ8EKw==";
+
+            //EncryptionKey16Chars = "IfJ0CaO4gwpDNWeTNwhu6GyInRGlR+aA";
+
+            /* Swap before committing  */
+            PrimaryStorageAccountName = "jhtest2";
+            PrimaryStorageAccountKey = "9EzOsuJ4wJf17YeUnDjVIaRqjX3BEmJ3nNgSjSPwSAppqG9YmXYeIsGzXdozmUDA6Mr8/DhylqcgUN44YNd0aw==";
+
+            IndexStorageAccountName = "jhtest2idx";
+            IndexStorageAccountKey = "3uk/55TOQ+tInk55YyOc4yuClSkq3fJwgB7MRp/dTdoW78D9aiv4vwq8nVxz0wZ5O5c35V6zMXMp2OnHAjW0Dw==";
 
             EncryptionKey16Chars = "IfJ0CaO4gwpDNWeTNwhu6GyInRGlR+aA";
 
@@ -44,8 +53,10 @@ namespace Samples.Common
 
         public Dictionary<string, Post> Posts { get; set; }
 
-        public Dictionary<string, Post> GetPosts()
+        public async Task<Dictionary<string, Post>> GetPosts()
         {
+            //Posts =  await DB.Posts.
+
             return null;
         }
     }

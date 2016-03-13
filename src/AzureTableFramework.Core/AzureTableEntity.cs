@@ -11,7 +11,7 @@ namespace AzureTableFramework.Core
     public class AzureTableEntity : TableEntity
     {
         [JsonIgnore]
-        public CloudStorageAccount DefaultStorageAccount { get; set; }
+        public AzureTablesContext Context { get; set; }
 
         public AzureTableEntity()
         {

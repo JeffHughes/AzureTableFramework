@@ -13,10 +13,8 @@ namespace CoreTests
 {
     public class Blobs
     {
-        // await I.Comment.Save(DB.PrimaryStorageAccount(), "This is a test for comment");
-
         [Fact]
-        public async Task SaveSimpleBlob()
+        public async Task SimpleBinaryBlob()
         {
             var url = "http://2016tempdata2.azurewebsites.net/images/header_round_avatar50.png";
             byte[] result = await new HttpClient().GetByteArrayAsync(new Uri(url));
@@ -27,13 +25,15 @@ namespace CoreTests
 
             using (var DB = new BloggingContext())
             {
-                var I = new CommentImage() { CommentID = "Testing", CommentImageID = CommentImageID };
-
-                DB.CommentImages.Add(I);
+                var I = DB.CommentImages.New(
+                    new vals() {
+                         { "CommentID", "Testing" },
+                         { "CommentImageID", CommentImageID }
+                    });
 
                 // await I.Image.Save(DB.PrimaryStorageAccount(), result);
-                I.Image.FileNameWithoutExtension = "Avatar";
-                I.Image.FileExtension = "png";
+                //I.Image.FileNameWithoutExtension = "Avatar";
+                //I.Image.FileExtension = "png";
                 await I.Image.SaveData(result);
 
                 await DB.SaveChangesAsync();
@@ -47,9 +47,42 @@ namespace CoreTests
             {
                 var I = await DB.CommentImages.GetByIDAsync(CommentImageID);
 
-                var CBB = await I.Image.GetCBB(DB.PrimaryStorageAccount());
+                var CBB = await I.Image.GetCBB();
 
-                if (CBB != null) Debug.WriteLine(" CBB.Uri: " + CBB.Uri);
+                if (CBB != null) Debug.WriteLine("CBB.Uri: " + CBB.Uri);
+
+                I.HardDelete();
+
+                await DB.SaveChangesAsync();
+            }
+        }
+
+        [Fact]
+        public async Task SimpleTextBlob()
+        {
+            var CommentID = Guid.NewGuid().ToString();
+
+            using (var DB = new BloggingContext())
+            {
+                var I = DB.Comments.New(
+                    new vals() {
+                         { "PostID", "Testing" },
+                         { "UserID", "Testing" },
+                         { "CommentID", CommentID }
+                    });
+
+                await I.CommentHtml.SaveData("This is a test of the <html> content");
+
+                await DB.SaveChangesAsync();
+            }
+
+            using (var DB = new BloggingContext())
+            {
+                var I = await DB.Comments.GetByIDAsync(CommentID);
+
+                var html = await I.CommentHtml.GetData(DB.PrimaryStorageAccount());
+
+                Debug.WriteLine("CommentHtml: " + html);
 
                 I.HardDelete();
 

@@ -156,6 +156,29 @@ namespace AzureTableFramework.Core
             };
         }
 
+        // Delete
+
+        //public async Task DeleteAllAsync(string filterString)
+        //{
+        //    var SW = new Stopwatch(); SW.Start(); var segmentCounter = 0;
+
+        //    var segment = await QueryAsync(filterString, null);
+
+        //    if (segment == null || !segment.Results.Any()) return;
+
+        //    var results = segment.Results;
+        //    while (segment.token != null)
+        //    {
+        //        segment = await QueryAsync(filterString, segment.token);
+        //        results.AddRange(segment.Results);
+        //        segmentCounter++;
+        //    }
+
+        //    Debug.WriteLine(Name + ": " + filterString +
+        //        " returned " + results.Count + " record" + (results.Count == 1 ? "" : "s") +
+        //        " execution time = " + SW.Elapsed + " with " + segmentCounter + " segment" + (segmentCounter != 1 ? "s" : ""));
+        //}
+
         //Dynamic Indexes
 
         public async Task<AzureTableQueryResults<T>> DynamicIndexQueryAsync(T obj, string indexedProperty, DateTime LessThanTime, TableContinuationToken token)

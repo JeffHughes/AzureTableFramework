@@ -174,6 +174,44 @@ namespace AzureTableFramework.Core
             return indexCount;
         }
 
+        private async Task<int> DeleteDynamicTableItems(object item)
+        {
+            var indexCount = 0;
+
+            foreach (var dynamicIdxProp in item.GetType().GetProperties().Where(x => x.GetCustomAttributes(typeof(DynamicIndexAttribute), true).Any()))
+            {
+                var props = ((DynamicIndexAttribute)dynamicIdxProp.GetCustomAttribute(typeof(DynamicIndexAttribute), false)).Properties;
+                var DynamicIndexTableName = Utils.IndexTableName(item, props);
+
+                var table = await Utils.GetCloudTableAsync(DynamicIndexTableName, IndexStorageAccount(), false);
+                if (table != null)
+                {
+                    var fs = Utils.FilterString("RowKey", QueryComparisons.Equal, Utils.GetRowKeyValue(item));
+                    var tq = new TableQuery { FilterString = fs };
+                    var segment = await table.ExecuteQuerySegmentedAsync(tq, null);
+
+                    var dtqsresults = segment.Results.ToList();
+                    while (segment.ContinuationToken != null)
+                    {
+                        segment = await table.ExecuteQuerySegmentedAsync(tq, segment.ContinuationToken);
+                        dtqsresults.AddRange(segment.Results.ToList());
+                    }
+
+                    indexCount = indexCount + dtqsresults.Count;
+
+                    //while (dtqsresults.Any())
+                    //{
+                    var batchOperation = new TableBatchOperation();
+                    dtqsresults.ForEach(o => batchOperation.Delete(o));
+                    await table.ExecuteBatchAsync(batchOperation);
+                    //    dtqsresults = dtqsresults.Take(100).ToList();
+                    //}
+                }
+            }
+
+            return indexCount;
+        }
+
         private async Task<int> BatchCloudActionSoftDeleteItems<T>(AzureTableDictionary<T> dictionary, List<T> list)
         {
             // if (!list.Any()) return 0;
@@ -203,6 +241,9 @@ namespace AzureTableFramework.Core
                 indexCount = indexCount + Indexes[key].Count;
             }
 
+            foreach (var item in results)
+                indexCount = indexCount + await DeleteDynamicTableItems(item);
+
             return indexCount;
         }
 
@@ -213,15 +254,23 @@ namespace AzureTableFramework.Core
             var results = await BatchCloudTableOperation(list.First().GetType().Name, PrimaryStorageAccount(),
                 Utils.SetRowAndPartitionKeyPropertiesFromTypedObjectList(list), true);
 
+            var indexCount = 0;
+
             foreach (var item in list)
             {
                 dictionary.Items.Remove(Utils.GetRowKeyValue(item));
                 await Utils.DeleteBlobs(item, PrimaryStorageAccount());
+                try
+                {
+                    indexCount = indexCount + await DeleteDynamicTableItems(item);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("error on DeleteDynamicTableItems: " + ex.Message);
+                }
             }
 
             var Indexes = Utils.GetIndexes(results);
-
-            var indexCount = 0;
 
             foreach (var key in Indexes.Keys)
             {

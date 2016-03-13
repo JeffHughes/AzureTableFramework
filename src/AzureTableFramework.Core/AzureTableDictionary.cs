@@ -56,7 +56,7 @@ namespace AzureTableFramework.Core
             if (Items.ContainsKey(key)) Items.Remove(key);
 
             var ATE = (item as AzureTableEntity);
-            ATE.DefaultStorageAccount = _AzureTablesContext.PrimaryStorageAccount();
+            ATE.Context = _AzureTablesContext;
             ATE.init();
 
             Items.Add(key, item);
@@ -85,6 +85,22 @@ namespace AzureTableFramework.Core
         {
             foreach (var item in items) await Prep(item);
             return items;
+        }
+
+        /// <summary>
+        /// Creates a new item, generates a guid for the ID and adds it to the list
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public T New(vals ObjectVals)
+        {
+            var o = (T)Activator.CreateInstance(typeof(T), null);
+
+            foreach (var key in ObjectVals.Keys)
+                Utils.SetVal(o, key, ObjectVals[key]);
+
+            Add(o);
+            return o;
         }
 
         /// <summary>
@@ -138,5 +154,9 @@ namespace AzureTableFramework.Core
         {
             return Utils.ExcludeOn<T, T2>(ToList(), excludeList, propertyName);
         }
+    }
+
+    public class vals : Dictionary<string, object>
+    {
     }
 }

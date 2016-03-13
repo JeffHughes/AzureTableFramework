@@ -68,10 +68,11 @@ namespace AzureTableFramework.Core
         {
             var container = await BlobContainer(obj, AzureStorageAccount);
 
+            var pathPrefix = $"/{obj.GetType().Name.ToLower()}/";
+
             foreach (var BI in (await Blobs(obj, AzureStorageAccount)).Values)
             {
                 var fullPath = BI.Uri.LocalPath;
-                var pathPrefix = $"/{obj.GetType().Name.ToLower()}/";
                 var relPath = fullPath.Replace(pathPrefix, "");
 
                 var CBB = container.GetBlockBlobReference(relPath);
@@ -210,7 +211,7 @@ namespace AzureTableFramework.Core
 
         public async Task<CloudBlockBlob> CreateCBB()
         {
-            return await CreateCBB((CallingObject as AzureTableEntity).DefaultStorageAccount);
+            return await CreateCBB((CallingObject as AzureTableEntity).Context.PrimaryStorageAccount());
         }
 
         public async Task<CloudBlockBlob> CreateCBB(CloudStorageAccount AzureStorageAccount)
@@ -241,9 +242,13 @@ namespace AzureTableFramework.Core
             await cbb.DeleteIfExistsAsync();
         }
 
-        public async Task GetData()
+        private async Task<object> GetData()
         {
-            await GetData((CallingObject as AzureTableEntity).DefaultStorageAccount);
+            if ((CallingObject as AzureTableEntity).Context == null)
+                throw new Exception("CallingObject.Context.PrimaryStorageAccount Not Found. \n" +
+                    " Add PrimaryStorageAccount to: GetData(DB.PrimaryStorageAccount()) ");
+
+            return await GetData((CallingObject as AzureTableEntity).Context.PrimaryStorageAccount());
         }
 
         public async Task<object> GetData(CloudStorageAccount AzureStorageAccount)
@@ -261,7 +266,7 @@ namespace AzureTableFramework.Core
 
         public async Task<CloudBlockBlob> GetCBB()
         {
-            return await GetCBB((CallingObject as AzureTableEntity).DefaultStorageAccount);
+            return await GetCBB((CallingObject as AzureTableEntity).Context.PrimaryStorageAccount());
         }
 
         public async Task<CloudBlockBlob> GetCBB(CloudStorageAccount AzureStorageAccount)
@@ -288,7 +293,7 @@ namespace AzureTableFramework.Core
 
         public async Task<Uri> GetUri()
         {
-            return await GetUri((CallingObject as AzureTableEntity).DefaultStorageAccount);
+            return await GetUri((CallingObject as AzureTableEntity).Context.PrimaryStorageAccount());
         }
 
         public async Task<Uri> GetUri(CloudStorageAccount AzureStorageAccount)
@@ -299,7 +304,7 @@ namespace AzureTableFramework.Core
 
         public async Task SaveData(object Content)
         {
-            await SaveData((CallingObject as AzureTableEntity).DefaultStorageAccount, Content);
+            await SaveData((CallingObject as AzureTableEntity).Context.PrimaryStorageAccount(), Content);
         }
 
         public async Task SaveData(CloudStorageAccount AzureStorageAccount, object Content)
