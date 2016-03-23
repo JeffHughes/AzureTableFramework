@@ -1,0 +1,32 @@
+{
+  "version": "1.0.0-*",
+  "description": "AzureTableFramework Class Library",
+  "authors": [ "Jeff Hughes" ],
+  "tags": [ "" ],
+  "projectUrl": "http://AzureTableFramework.net",
+  "licenseUrl": "",
+  "frameworks": {
+    "net451": {
+      "dependencies": {
+        "System.Text.Encoding": "4.0.11-beta-23516",
+        "System.Threading.Tasks": "4.0.11-beta-23516"
+      }
+    },
+    "dotnet5.4": {
+      "dependencies": {
+        "Microsoft.CSharp": "4.0.1-beta-23516",
+        "System.Collections": "4.0.11-beta-23516",
+        "System.Linq": "4.0.1-beta-23516",
+        "System.Runtime": "4.0.21-beta-23516",
+        "System.Threading": "4.0.11-beta-23516",
+        "System.Reflection": "4.1.0-beta-23516"
+      }
+    }
+  },
+  "dependencies": {
+    "AutoMapper": "4.1.1",
+    "Microsoft.Extensions.Configuration.Abstractions": "1.0.0-rc1-final",
+    "Newtonsoft.Json": "8.0.2",
+    "WindowsAzure.Storage": "6.2.2-preview"
+  }
+}
