@@ -1,3 +1,5 @@
+We moved this to a private TFS repository just after creating this - I've left this version behind for anyone who wants to get the drift of the original idea.
+
 This is very much a work in progress - don't judge me, yet!
 
 # AzureTableFramework
