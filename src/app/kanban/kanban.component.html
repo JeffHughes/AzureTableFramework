@@ -1,0 +1,103 @@
+<ng-container *ngIf="viewable">
+  <ejs-kanban
+    #kb
+    keyField="Area"
+    [dataSource]="data"
+    [cardSettings]="cardSettings"
+    [dialogSettings]="dialogSettings"
+    [sortSettings]="sortSettings"
+    (actionComplete)="actionComplete()"
+  >
+    <e-columns>
+      <e-column headerText="Always" keyField="Always">
+        <ng-template #template let-data>
+          <div style="width: 100%; display: flex; justify-content: center">
+            <div class="header-text">{{ data.headerText }}</div>
+            <div class="header-text">
+              &nbsp; {{ getTotal(data.headerText) }}
+            </div>
+          </div>
+        </ng-template>
+      </e-column>
+      <e-column headerText="Often" keyField="Often">
+        <ng-template #template let-data>
+          <div style="width: 100%; display: flex; justify-content: center">
+            <div class="header-text">{{ data.headerText }}</div>
+            <div class="header-text">
+              &nbsp; {{ getTotal(data.headerText) }}
+            </div>
+          </div>
+        </ng-template>
+      </e-column>
+      <e-column headerText="Meets" keyField="Meets"
+        ><ng-template #template let-data>
+          <div style="width: 100%; display: flex; justify-content: center">
+            <div class="header-text">{{ data.headerText }}</div>
+            <div class="header-text">
+              &nbsp; {{ getTotal(data.headerText) }}
+            </div>
+          </div>
+        </ng-template></e-column
+      >
+      <e-column headerText="Below" keyField="Below"
+        ><ng-template #template let-data>
+          <div style="width: 100%; display: flex; justify-content: center">
+            <div class="header-text">{{ data.headerText }}</div>
+            <div class="header-text">
+              &nbsp; {{ getTotal(data.headerText) }}
+            </div>
+          </div>
+        </ng-template></e-column
+      >
+    </e-columns>
+    <ng-template #cardSettingsTemplate let-data>
+      <div [class]="getClass(data)">
+        <div style="display: flex; width: 100%; justify-content: space-between">
+          <div>
+            {{ data.Name }}
+            {{ data.Role }}-{{ data.Level }}
+          </div>
+
+          <div>
+            <ng-container *ngIf="data.Promote">
+              <img src="../../assets/promote.png" height="16" />
+            </ng-container>
+          </div>
+        </div>
+        <div
+          style="background-color: whitesmoke; width: 100%; "
+          *ngIf="data.Notes"
+        >
+          {{ data.Notes }}
+        </div>
+      </div>
+    </ng-template>
+  </ejs-kanban>
+
+  <div
+    *ngIf="isAdmin"
+    style="width: 100%; text-align: right; padding-right: 45px"
+  >
+    <button ejs-button (click)="addCard()">Add Employee</button>
+    &nbsp;
+    <button
+      style="background-color: #0078d6; border-color: #0078d6; color: white"
+      ejs-button
+      (click)="saveBoard()"
+      class="primary"
+      [disabled]="!dataChanged"
+    >
+      Save
+    </button>
+  </div>
+
+  DoubleClick to edit
+  <ul>
+    <li>Flags: 0,1,2</li>
+    <li>Promotion: 0,1</li>
+  </ul>
+</ng-container>
+
+<ng-container *ngIf="!viewable">
+  <div>sorry, you don't have permissions to view this.</div>
+</ng-container>
