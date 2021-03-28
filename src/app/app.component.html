@@ -1,17 +1,21 @@
 <div
   *ngIf="loggedIn"
   style="
-    position: absolute;
-    top: 2px;
-    right: 4px;
+    position: fixed;
+    top: 0;
+    right: 0;
     z-index: 1;
     width: 100%;
     text-align: right;
     font-size: small;
+    background: url('../assets/header-gradient.png') center repeat-x;
+    background-size: auto 100%;
+    color: white;
+    padding: 5px;
   "
 >
-  {{ user.displayName || user.email }}
-  <a href="" (click)="SignOut()"> Logout </a>
+
+  <a href="" style="color: white; text-decoration: none;" (click)="SignOut()"> Logout   {{ user.displayName || user.email.replace('@tradestation.com','') }} </a>
 </div>
 
 <app-kanban *ngIf="loggedIn"></app-kanban>

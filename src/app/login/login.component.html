@@ -36,7 +36,7 @@
             placeholder="Password"
             #userPassword
             required
-            style="width: 290px"
+            style="width: 310px"
           />
         </div>
       </td>
@@ -50,8 +50,11 @@
         >
           <div>
             {{ message }}
-            <a *ngIf="showResetPassword" (click)="resetPassword(userName)"
-              >Reset</a
+            <a style="text-decoration: underline;
+            cursor: pointer;
+            font-size: small;
+            " *ngIf="showResetPassword" (click)="resetPassword(userName)"
+              >Send Reset Email</a
             >
           </div>
 

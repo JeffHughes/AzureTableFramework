@@ -14,6 +14,9 @@ import { User } from '../login/login.component';
   styleUrls: ['./kanban.component.scss'],
 })
 export class KanbanComponent implements OnInit {
+  constructor(private db: AngularFirestore) {
+    this.sub();
+  }
   @ViewChild('kb') kb;
   public data = [];
 
@@ -45,11 +48,12 @@ export class KanbanComponent implements OnInit {
   isAdmin = false;
   isUser = false;
 
-  constructor(private db: AngularFirestore) {
-    this.sub();
-  }
+  loading = true;
 
   lastSavedData;
+
+  actionCount = 0;
+  dataChanged = true;
   sub() {
     this.employeeFBDoc = this.db
       .collection('employees')
@@ -63,8 +67,9 @@ export class KanbanComponent implements OnInit {
         dataDoc.data &&
         JSON.stringify(this.data) !== JSON.stringify(dataDoc.data)
       ) {
+        this.loading = false;
         this.data = dataDoc.data;
-        this.lastSavedData = this.data;
+        this.lastSavedData = JSON.parse(JSON.stringify(this.data));
         const user: User = JSON.parse(localStorage.getItem('user'));
 
         const username = user.email
@@ -98,7 +103,7 @@ export class KanbanComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    //console.log(this.data);
+    // console.log(this.data);
   }
 
   addCard() {
@@ -119,8 +124,8 @@ export class KanbanComponent implements OnInit {
   getClass(data) {
     let classes = 'e-card-content ';
 
-    if (data['Flag']) {
-      classes += 'Flag Flag' + data['Flag'];
+    if (data.Flag) {
+      classes += 'Flag Flag' + data.Flag;
     }
 
     return classes;
@@ -164,16 +169,18 @@ export class KanbanComponent implements OnInit {
       },
       { merge: true }
     );
-    this.lastSavedData = this.data;
+    this.lastSavedData = JSON.parse(JSON.stringify(this.data));
     // this.sub();
+
+    this.reset();
   }
 
   getTotal(text) {
-    const area = this.data.filter((f) => f['Area'] === text);
+    const area = this.data.filter((f) => f.Area === text);
 
     return (
       area.length +
-      ' / ' +
+      '/' +
       this.data.length +
       ' (' +
       ((100 * area.length) / this.data.length).toFixed(1) +
@@ -181,15 +188,55 @@ export class KanbanComponent implements OnInit {
     );
   }
 
-  dataChanged = true;
-  actionComplete() {
-    if (JSON.stringify(this.kb.dataSource) !== JSON.stringify(this.data)) {
-      this.dataChanged = true;
-    }
+  actionComplete(): void {
+    setTimeout(() => {
+      this.SortEmployees();
+    }, 100);
 
-    console.log(this.dataChanged);
-    console.log(JSON.stringify(this.kb.dataSource));
-    console.log(JSON.stringify(this.data));
+
+    //  console.log(this.data);
+
+    // if (JSON.stringify(this.kb.dataSource) !== JSON.stringify(this.lastSavedData )) {
+    this.dataChanged = true;
+    this.actionCount++;
+    // }
+
+    // console.log(this.dataChanged);
+    // console.log(JSON.stringify(this.kb.dataSource));
+    // console.log(JSON.stringify(this.lastSavedData));
     // this.saveBoard();
+  }
+
+  private SortEmployees() {
+    const employeeAreas = {};
+    this.kb.dataSource.forEach((employee) => {
+      if (!employeeAreas[employee.Area]) {
+        employeeAreas[employee.Area] = [];
+      }
+      employeeAreas[employee.Area].push(employee);
+    });
+    // there might be a simpler way for this
+    const keys = ['Always', 'Often', 'Meets', 'Below'];
+
+    const employees = [];
+    let OverAllRankCounter = 1;
+    keys.forEach((k) => {
+      employeeAreas[k].sort((a, b) => (a.RankId > b.RankId ? 1 : -1));
+      let counter = 1;
+      employeeAreas[k].forEach((e) => {
+        e.RankId = counter++;
+        e.OverAllRank = OverAllRankCounter++;
+        employees.push(e);
+      });
+    });
+
+    this.kb.dataSource = employees;
+  }
+
+  reset() {
+    this.kb.dataSource = this.lastSavedData;
+    this.data = JSON.parse(JSON.stringify(this.lastSavedData));
+    this.actionCount = 0;
+    this.dataChanged = true;
   }
 }

@@ -1,4 +1,46 @@
 <ng-container *ngIf="viewable">
+  <div
+    *ngIf="isAdmin"
+    style="
+      position: fixed;
+      top: -2.5px;
+      left: 0;
+      z-index: 30;
+
+      text-align: left;
+
+      color: white;
+      padding: 5px;
+    "
+  >
+    <a href="#" (click)="addCard()" style="color: white; text-decoration: none">
+      <img src="../../assets/add-15x15.png" style="height: 15px" />
+      add employee
+    </a>
+
+    &nbsp; &nbsp;
+
+    <ng-container *ngIf="actionCount && actionCount > 0">
+      <a
+        href="#"
+        (click)="saveBoard()"
+        style="color: white; text-decoration: none"
+      >
+        <img src="../../assets/save-15x15.png" style="height: 15px" />
+        publish {{ actionCount }} action<ng-container *ngIf="actionCount != 1"
+          >s</ng-container
+        >
+      </a>
+
+      &nbsp; &nbsp;
+
+      <a href="#" (click)="reset()" style="color: white; text-decoration: none">
+        <img src="../../assets/reset-15x15.png" style="height: 15px" />
+        reset to last publish
+      </a>
+    </ng-container>
+  </div>
+
   <ejs-kanban
     #kb
     keyField="Area"
@@ -7,12 +49,13 @@
     [dialogSettings]="dialogSettings"
     [sortSettings]="sortSettings"
     (actionComplete)="actionComplete()"
+    style="margin-top: 30px"
   >
     <e-columns>
       <e-column headerText="Always" keyField="Always">
         <ng-template #template let-data>
           <div style="width: 100%; display: flex; justify-content: center">
-            <div class="header-text">{{ data.headerText }}</div>
+            <div class="header-text">{{ data.headerText }} Exceeds</div>
             <div class="header-text">
               &nbsp; {{ getTotal(data.headerText) }}
             </div>
@@ -22,7 +65,7 @@
       <e-column headerText="Often" keyField="Often">
         <ng-template #template let-data>
           <div style="width: 100%; display: flex; justify-content: center">
-            <div class="header-text">{{ data.headerText }}</div>
+            <div class="header-text">{{ data.headerText }} Exceeds</div>
             <div class="header-text">
               &nbsp; {{ getTotal(data.headerText) }}
             </div>
@@ -54,6 +97,7 @@
       <div [class]="getClass(data)">
         <div style="display: flex; width: 100%; justify-content: space-between">
           <div>
+            {{ data.RankId }}.
             {{ data.Name }}
             {{ data.Role }}-{{ data.Level }}
           </div>
@@ -65,7 +109,7 @@
           </div>
         </div>
         <div
-          style="background-color: whitesmoke; width: 100%; "
+          style="background-color: whitesmoke; width: 100%"
           *ngIf="data.Notes"
         >
           {{ data.Notes }}
@@ -74,7 +118,7 @@
     </ng-template>
   </ejs-kanban>
 
-  <div
+  <!-- <div
     *ngIf="isAdmin"
     style="width: 100%; text-align: right; padding-right: 45px"
   >
@@ -96,8 +140,9 @@
     <li>Flags: 0,1,2</li>
     <li>Promotion: 0,1</li>
   </ul>
-</ng-container>
+</ng-container> -->
 
-<ng-container *ngIf="!viewable">
-  <div>sorry, you don't have permissions to view this.</div>
+  <ng-container *ngIf="!viewable && !loading">
+    <div>sorry, you don't have permissions to view this.</div>
+  </ng-container>
 </ng-container>
