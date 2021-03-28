@@ -18,6 +18,8 @@ export class KanbanComponent implements OnInit {
     this.sub();
   }
   @ViewChild('kb') kb;
+  @ViewChild('spreadsheet') spreadsheet;
+
   public data = [];
 
   public sortSettings: SortSettingsModel = {
@@ -47,6 +49,7 @@ export class KanbanComponent implements OnInit {
   viewable = false;
   isAdmin = false;
   isUser = false;
+  showSpreadsheet = false;
 
   loading = true;
 
@@ -68,9 +71,12 @@ export class KanbanComponent implements OnInit {
         JSON.stringify(this.data) !== JSON.stringify(dataDoc.data)
       ) {
         this.loading = false;
-        this.data = dataDoc.data;
+
+        this.data = this.SortEmployees(dataDoc.data);
         this.lastSavedData = JSON.parse(JSON.stringify(this.data));
         const user: User = JSON.parse(localStorage.getItem('user'));
+
+        console.log(this.data);
 
         const username = user.email
           .toLowerCase()
@@ -190,9 +196,10 @@ export class KanbanComponent implements OnInit {
 
   actionComplete(): void {
     setTimeout(() => {
-      this.SortEmployees();
+      this.data = this.SortEmployees(this.kb.dataSource);
+      this.kb.dataSource = this.data;
+      this.spreadsheet.dataSource = this.data;
     }, 100);
-
 
     //  console.log(this.data);
 
@@ -205,11 +212,14 @@ export class KanbanComponent implements OnInit {
     // console.log(JSON.stringify(this.kb.dataSource));
     // console.log(JSON.stringify(this.lastSavedData));
     // this.saveBoard();
+
+    // this.kb.dataSource = employees;
+    // console.log({ employees });
   }
 
-  private SortEmployees() {
+  private SortEmployees(source) {
     const employeeAreas = {};
-    this.kb.dataSource.forEach((employee) => {
+    source.forEach((employee) => {
       if (!employeeAreas[employee.Area]) {
         employeeAreas[employee.Area] = [];
       }
@@ -226,17 +236,70 @@ export class KanbanComponent implements OnInit {
       employeeAreas[k].forEach((e) => {
         e.RankId = counter++;
         e.OverAllRank = OverAllRankCounter++;
-        employees.push(e);
+        employees.push(this.sortKeys(e));
       });
     });
+    return employees;
+  }
 
-    this.kb.dataSource = employees;
+  sortKeys(item): object {
+    return {
+      OverAllRank: item.OverAllRank,
+      Name: item.Name,
+      Area: item.Area,
+      RankId: item.RankId,
+      Role: item.Role,
+      Level: item.Level,
+      Promote: item.Promote,
+      Flag: item.Flag,
+      Notes: item.Notes,
+      Id: item.Id,
+    };
   }
 
   reset() {
     this.kb.dataSource = this.lastSavedData;
+    this.spreadsheet.dataSource = this.lastSavedData;
     this.data = JSON.parse(JSON.stringify(this.lastSavedData));
     this.actionCount = 0;
     this.dataChanged = true;
+  }
+
+  beforeSave(args) {
+    args.isFullPost = false;
+    args.needBlobData = true;
+
+    console.log(args);
+
+    console.log(this.spreadsheet);
+  }
+
+  saveComplete(args) {
+    console.log(args);
+
+    alert("haven't implemented save yet - copy paste to excel");
+  }
+
+  dataBound(args: any) {
+    // console.log({ args });
+    // console.log( this.spreadsheet   );
+    // console.log( this.spreadsheet.sheets    );
+    // for (const col of this.spreadsheet.sheets[0].columns  ) {
+    //   switch (col.field) {
+    //     case 'Id':
+    //       col.width = 50;
+    //       col.index = 0;
+    //       break;
+    //     case 'OverAllRank':
+    //       col.width = 50;
+    //       col.index = 1;
+    //       break;
+    //     case 'Name':
+    //       col.width = 150;
+    //       col.index = 2;
+    //       break;
+    //   }
+    // }
+    // this.spreadsheet.refreshColumns();
   }
 }

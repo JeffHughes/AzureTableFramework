@@ -3,11 +3,17 @@ $theme: "fabric";
 
 @import url("../node_modules/@syncfusion/ej2-base/styles/#{$theme}.css");
 @import url("../node_modules/@syncfusion/ej2-buttons/styles/#{$theme}.css");
+@import url("../node_modules/@syncfusion/ej2-splitbuttons/styles/#{$theme}.css");
+@import url("../node_modules/@syncfusion/ej2-lists/styles/#{$theme}.css");
+@import url("../node_modules/@syncfusion/ej2-navigations/styles/#{$theme}.css");
 @import url("../node_modules/@syncfusion/ej2-dropdowns/styles/#{$theme}.css");
 @import url("../node_modules/@syncfusion/ej2-inputs/styles/#{$theme}.css");
 @import url("../node_modules/@syncfusion/ej2-layouts/styles/#{$theme}.css");
 @import url("../node_modules/@syncfusion/ej2-popups/styles/#{$theme}.css");
 @import url("../node_modules/@syncfusion/ej2-angular-kanban/styles/#{$theme}.css");
+@import url("../node_modules/@syncfusion/ej2-grids/styles/#{$theme}.css");
+@import url("../node_modules/@syncfusion/ej2-spreadsheet/styles/#{$theme}.css");
+@import url("../node_modules/@syncfusion/ej2-angular-spreadsheet/styles/#{$theme}.css");
 
 html,
 body {

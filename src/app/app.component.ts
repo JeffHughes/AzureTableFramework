@@ -14,6 +14,12 @@ export class AppComponent {
   checkLoggedInInterval;
 
   constructor(public afAuth: AngularFireAuth, public afs: AngularFirestore) {
+    if (this.isLoggedIn()) {
+      this.loggedIn = true;
+     // console.log('logged in', this.user);
+      clearInterval(this.checkLoggedInInterval);
+    }
+
     this.checkLoggedInInterval = setInterval(() => {
       if (this.isLoggedIn()) {
         this.loggedIn = true;

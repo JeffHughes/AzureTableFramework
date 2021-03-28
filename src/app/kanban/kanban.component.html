@@ -118,6 +118,48 @@
     </ng-template>
   </ejs-kanban>
 
+  <div *ngIf="!showSpreadsheet" style="margin-left: 10px">
+    <a href="#" (click)="showSpreadsheet = true">show spreadsheet</a>
+  </div>
+
+  <!--
+      [allowOpen]="false"
+      [saveUrl]="'#'"
+      (beforeSave)="beforeSave($event)"
+      (saveComplete)="saveComplete($event)"
+    -->
+  <div *ngIf="showSpreadsheet" style="height: 95vh">
+    <ejs-spreadsheet
+      #spreadsheet
+      [showFile]="false"
+      (dataBound)="dataBound($event)"
+    >
+      <e-sheets>
+        <e-sheet
+          [allowSave]="true"
+          [protectSettings]="{
+            selectCells: true,
+            formatCells: false,
+            formatRows: false,
+            formatColumns: false,
+            insertLink: false
+          }"
+        >
+          <e-ranges> <e-range [dataSource]="data"></e-range></e-ranges
+          ><e-columns>
+            <e-column [width]="90"></e-column>
+            <e-column [width]="170"></e-column>
+            <e-column [width]="78"></e-column>
+            <e-column [width]="56"></e-column>
+            <e-column [width]="40"></e-column>
+            <e-column [width]="36"></e-column>
+            <e-column [width]="60"></e-column>
+            <e-column [width]="40"></e-column>
+            <e-column [width]="150"></e-column>
+            <e-column [width]="1"></e-column> </e-columns></e-sheet></e-sheets
+    ></ejs-spreadsheet>
+  </div>
+  <br /><br />
   <!-- <div
     *ngIf="isAdmin"
     style="width: 100%; text-align: right; padding-right: 45px"

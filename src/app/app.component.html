@@ -8,14 +8,17 @@
     width: 100%;
     text-align: right;
     font-size: small;
-    background: url('../assets/header-gradient.png') center repeat-x;
-    background-size: auto 100%;
+    background-color: #006DB8;
+
+    background-size: auto 100% !important;
     color: white;
     padding: 5px;
   "
 >
-
-  <a href="" style="color: white; text-decoration: none;" (click)="SignOut()"> Logout   {{ user.displayName || user.email.replace('@tradestation.com','') }} </a>
+  <!-- background: url('../assets/header-gradient.png') center repeat-x !important; -->
+  <a href="" style="color: white; text-decoration: none" (click)="SignOut()">
+    Logout {{ user.displayName || user.email.replace("@tradestation.com", "") }}
+  </a>
 </div>
 
 <app-kanban *ngIf="loggedIn"></app-kanban>

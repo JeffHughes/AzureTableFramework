@@ -10,6 +10,7 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { LoginComponent } from './login/login.component';
+import { SpreadsheetAllModule } from '@syncfusion/ej2-angular-spreadsheet';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDcxvR57JigS-jaP8ssmE0hnp2hyHFKNAQ',
@@ -21,12 +22,12 @@ const firebaseConfig = {
 };
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    KanbanComponent,
-    LoginComponent,
-  ],
-  imports: [BrowserModule, KanbanModule, ButtonModule,
+  declarations: [AppComponent, KanbanComponent, LoginComponent],
+  imports: [
+    BrowserModule,
+    KanbanModule,
+    ButtonModule,
+    SpreadsheetAllModule,
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFirestoreModule, // firestore
     AngularFireAuthModule, // auth
