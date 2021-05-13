@@ -171,7 +171,7 @@ export class KanbanComponent implements OnInit {
     this.employeeFBDoc.set(
       {
         data: this.data,
-        backup: this.data,
+        backup: null,
       },
       { merge: true }
     );
@@ -198,7 +198,14 @@ export class KanbanComponent implements OnInit {
     setTimeout(() => {
       this.data = this.SortEmployees(this.kb.dataSource);
       this.kb.dataSource = this.data;
-      this.spreadsheet.dataSource = this.data;
+
+      try {
+        this.spreadsheet ??= {};
+        this.spreadsheet.dataSource = this.data;
+      } catch (err) {
+        console.error(err);
+      }
+
     }, 100);
 
     //  console.log(this.data);
@@ -259,7 +266,12 @@ export class KanbanComponent implements OnInit {
 
   reset() {
     this.kb.dataSource = this.lastSavedData;
-    this.spreadsheet.dataSource = this.lastSavedData;
+    try {
+      this.spreadsheet ??= {};
+      this.spreadsheet['dataSource'] = this.lastSavedData;
+    } catch (err) {
+      console.error(err);
+    }
     this.data = JSON.parse(JSON.stringify(this.lastSavedData));
     this.actionCount = 0;
     this.dataChanged = true;
