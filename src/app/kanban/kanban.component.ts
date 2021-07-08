@@ -84,6 +84,7 @@ export class KanbanComponent implements OnInit {
 
         this.isAdmin = false;
         this.viewable = false;
+        this.isUser = false;
 
         dataDoc.roles.forEach((role) => {
           const s = role.split(':');
@@ -99,6 +100,7 @@ export class KanbanComponent implements OnInit {
 
               case 'User':
                 this.isUser = true;
+                this.isAdmin = false;
                 this.viewable = true;
                 break;
             }
