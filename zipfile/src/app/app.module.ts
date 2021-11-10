@@ -14,9 +14,9 @@ import { SpreadsheetAllModule } from '@syncfusion/ej2-angular-spreadsheet';
 
 const firebaseConfig = {
 
-  authDomain: 'xxxx',
-  projectId: 'xxxxx',
-  storageBucket: 'xxxxx',
+  authDomain: 'xxxxxxx',
+  projectId: 'xxxxxxx',
+  storageBucket: 'xxxxxxxxxxxx',
 
 
 };

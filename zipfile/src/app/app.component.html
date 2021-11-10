@@ -1,0 +1,28 @@
+<div
+  *ngIf="loggedIn"
+  style="
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 1;
+    width: 100%;
+    text-align: right;
+    font-size: small;
+    background-color: #006DB8;
+
+    background-size: auto 100% !important;
+    color: white;
+    padding: 5px;
+  "
+>
+  <!-- background: url('../assets/header-gradient.png') center repeat-x !important; -->
+  <a href="" style="color: white; text-decoration: none" (click)="SignOut()">
+    Logout {{ user.displayName || user.email.replace("@tradestation.com", "") }}
+  </a>
+</div>
+
+<app-kanban *ngIf="loggedIn"></app-kanban>
+
+<div *ngIf="!loggedIn" class="center-center">
+  <app-login></app-login>
+</div>

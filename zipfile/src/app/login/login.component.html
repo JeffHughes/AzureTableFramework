@@ -1,0 +1,79 @@
+<div
+  class="center-center"
+  (keydown)="keyDownFunction($event, userName, userPassword)"
+>
+  <table style="border: 1px solid #0089cf">
+    <tr style="border: 1px solid #0089cf">
+      <td style="font-size: 0">
+        <img src="../../assets/TSLogo.png" style="width: 100%; height: 100%" />
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <div style="display: flex" class="std-pad">
+          <div>
+            <input
+              type="text"
+              placeholder="Username"
+              style="width: 80px"
+              style="text-align: right"
+              #userName
+              required
+            />
+          </div>
+
+          <div>@tradestation.com</div>
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+      <td style="text-align: right">
+        <div class="std-pad">
+          <input
+            type="password"
+            placeholder="Password"
+            #userPassword
+            required
+            style="width: 310px"
+          />
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+      <td style="text-align: right">
+        <div
+          class="std-pad"
+          style="width: 95%; display: flex; justify-content: space-between"
+        >
+          <div>
+            {{ message }}
+            <a style="text-decoration: underline;
+            cursor: pointer;
+            font-size: small;
+            " *ngIf="showResetPassword" (click)="resetPassword(userName)"
+              >Send Reset Email</a
+            >
+          </div>
+
+          <div  >
+
+            <button ejs-button (click)="SignIn(userName, userPassword)">
+              Next >
+            </button>
+          </div>
+        </div>
+      </td>
+    </tr>
+
+    <tr *ngIf="showPassword">
+      <td>
+        <div class="std-pad">
+          <a (click)="resetPassword(userName.value)">Reset Password</a>
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>
