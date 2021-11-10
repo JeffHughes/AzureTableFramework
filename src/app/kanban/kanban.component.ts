@@ -37,9 +37,7 @@ export class KanbanComponent implements OnInit {
       { key: 'Level', type: 'TextBox' },
       { key: 'Notes', type: 'TextArea' },
       { key: 'Promote', type: 'Numeric' },
-      { key: 'Flag', type: 'Numeric' },
-      // { key: 'Promote', type: 'DropDown' },
-      // { key: 'Flag', type: 'DropDown' },
+      { key: 'Flag', type: 'Numeric' }, 
     ],
   };
 
