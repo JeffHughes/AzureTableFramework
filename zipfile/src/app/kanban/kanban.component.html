@@ -1,0 +1,190 @@
+<ng-container *ngIf="viewable">
+  <div
+    *ngIf="isAdmin"
+    style="
+      position: fixed;
+      top: -2.5px;
+      left: 0;
+      z-index: 30;
+
+      text-align: left;
+
+      color: white;
+      padding: 5px;
+    "
+  >
+    <a href="#" (click)="addCard()" style="color: white; text-decoration: none">
+      <img src="../../assets/add-15x15.png" style="height: 15px" />
+      add employee
+    </a>
+
+    &nbsp; &nbsp;
+
+    <ng-container *ngIf="actionCount && actionCount > 0">
+      <a
+        href="#"
+        (click)="saveBoard()"
+        style="color: white; text-decoration: none"
+      >
+        <img src="../../assets/save-15x15.png" style="height: 15px" />
+        publish {{ actionCount }} action<ng-container *ngIf="actionCount != 1"
+          >s</ng-container
+        >
+      </a>
+
+      &nbsp; &nbsp;
+
+      <a href="#" (click)="reset()" style="color: white; text-decoration: none">
+        <img src="../../assets/reset-15x15.png" style="height: 15px" />
+        reset to last publish
+      </a>
+    </ng-container>
+  </div>
+
+  <ejs-kanban
+    #kb
+    keyField="Area"
+    [dataSource]="data"
+    [cardSettings]="cardSettings"
+    [dialogSettings]="dialogSettings"
+    [sortSettings]="sortSettings"
+    (actionComplete)="actionComplete()"
+    style="margin-top: 30px"
+  >
+    <e-columns>
+      <e-column headerText="Always" keyField="Always">
+        <ng-template #template let-data>
+          <div style="width: 100%; display: flex; justify-content: center">
+            <div class="header-text">{{ data.headerText }} Exceeds</div>
+            <div class="header-text">
+              &nbsp; {{ getTotal(data.headerText) }}
+            </div>
+          </div>
+        </ng-template>
+      </e-column>
+      <e-column headerText="Often" keyField="Often">
+        <ng-template #template let-data>
+          <div style="width: 100%; display: flex; justify-content: center">
+            <div class="header-text">{{ data.headerText }} Exceeds</div>
+            <div class="header-text">
+              &nbsp; {{ getTotal(data.headerText) }}
+            </div>
+          </div>
+        </ng-template>
+      </e-column>
+      <e-column headerText="Meets" keyField="Meets"
+        ><ng-template #template let-data>
+          <div style="width: 100%; display: flex; justify-content: center">
+            <div class="header-text">{{ data.headerText }}</div>
+            <div class="header-text">
+              &nbsp; {{ getTotal(data.headerText) }}
+            </div>
+          </div>
+        </ng-template></e-column
+      >
+      <e-column headerText="Below" keyField="Below"
+        ><ng-template #template let-data>
+          <div style="width: 100%; display: flex; justify-content: center">
+            <div class="header-text">{{ data.headerText }}</div>
+            <div class="header-text">
+              &nbsp; {{ getTotal(data.headerText) }}
+            </div>
+          </div>
+        </ng-template></e-column
+      >
+    </e-columns>
+    <ng-template #cardSettingsTemplate let-data>
+      <div [class]="getClass(data)">
+        <div style="display: flex; width: 100%; justify-content: space-between">
+          <div>
+            {{ data.RankId }}.
+            {{ data.Name }}
+            {{ data.Role }}-{{ data.Level }}
+          </div>
+
+          <div>
+            <ng-container *ngIf="data.Promote">
+              <img src="../../assets/promote.png" height="16" />
+            </ng-container>
+          </div>
+        </div>
+        <div
+          style="background-color: whitesmoke; width: 100%"
+          *ngIf="data.Notes"
+        >
+          {{ data.Notes }}
+        </div>
+      </div>
+    </ng-template>
+  </ejs-kanban>
+
+  <div *ngIf="!showSpreadsheet" style="margin-left: 10px">
+    <a href="#" (click)="showSpreadsheet = true">show spreadsheet</a>
+  </div>
+
+  <!--
+      [allowOpen]="false"
+      [saveUrl]="'#'"
+      (beforeSave)="beforeSave($event)"
+      (saveComplete)="saveComplete($event)"
+    -->
+  <div *ngIf="showSpreadsheet" style="height: 95vh">
+    <ejs-spreadsheet
+      #spreadsheet
+      [showFile]="false"
+      (dataBound)="dataBound($event)"
+    >
+      <e-sheets>
+        <e-sheet
+          [allowSave]="true"
+          [protectSettings]="{
+            selectCells: true,
+            formatCells: false,
+            formatRows: false,
+            formatColumns: false,
+            insertLink: false
+          }"
+        >
+          <e-ranges> <e-range [dataSource]="data"></e-range></e-ranges
+          ><e-columns>
+            <e-column [width]="90"></e-column>
+            <e-column [width]="170"></e-column>
+            <e-column [width]="78"></e-column>
+            <e-column [width]="56"></e-column>
+            <e-column [width]="40"></e-column>
+            <e-column [width]="36"></e-column>
+            <e-column [width]="60"></e-column>
+            <e-column [width]="40"></e-column>
+            <e-column [width]="150"></e-column>
+            <e-column [width]="1"></e-column> </e-columns></e-sheet></e-sheets
+    ></ejs-spreadsheet>
+  </div>
+  <br /><br />
+  <!-- <div
+    *ngIf="isAdmin"
+    style="width: 100%; text-align: right; padding-right: 45px"
+  >
+    <button ejs-button (click)="addCard()">Add Employee</button>
+    &nbsp;
+    <button
+      style="background-color: #0078d6; border-color: #0078d6; color: white"
+      ejs-button
+      (click)="saveBoard()"
+      class="primary"
+      [disabled]="!dataChanged"
+    >
+      Save
+    </button>
+  </div>
+
+  DoubleClick to edit
+  <ul>
+    <li>Flags: 0,1,2</li>
+    <li>Promotion: 0,1</li>
+  </ul>
+</ng-container> -->
+
+  <ng-container *ngIf="!viewable && !loading">
+    <div>sorry, you don't have permissions to view this.</div>
+  </ng-container>
+</ng-container>

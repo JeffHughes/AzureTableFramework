@@ -1,0 +1,88 @@
+/* You can add global styles to this file, and also import other style files */
+$theme: "fabric";
+
+@import url("../node_modules/@syncfusion/ej2-base/styles/#{$theme}.css");
+@import url("../node_modules/@syncfusion/ej2-buttons/styles/#{$theme}.css");
+@import url("../node_modules/@syncfusion/ej2-splitbuttons/styles/#{$theme}.css");
+@import url("../node_modules/@syncfusion/ej2-lists/styles/#{$theme}.css");
+@import url("../node_modules/@syncfusion/ej2-navigations/styles/#{$theme}.css");
+@import url("../node_modules/@syncfusion/ej2-dropdowns/styles/#{$theme}.css");
+@import url("../node_modules/@syncfusion/ej2-inputs/styles/#{$theme}.css");
+@import url("../node_modules/@syncfusion/ej2-layouts/styles/#{$theme}.css");
+@import url("../node_modules/@syncfusion/ej2-popups/styles/#{$theme}.css");
+@import url("../node_modules/@syncfusion/ej2-angular-kanban/styles/#{$theme}.css");
+@import url("../node_modules/@syncfusion/ej2-grids/styles/#{$theme}.css");
+@import url("../node_modules/@syncfusion/ej2-spreadsheet/styles/#{$theme}.css");
+@import url("../node_modules/@syncfusion/ej2-angular-spreadsheet/styles/#{$theme}.css");
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", "GeezaPro", "DejaVu Serif", sans-serif, "-apple-system", "BlinkMacSystemFont";
+}
+
+.center-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 100%;
+  width: 100%;
+}
+
+.e-kanban .e-kanban-table {
+  border-spacing: 3px;
+}
+
+.e-kanban
+  .e-kanban-content
+  .e-content-row
+  .e-content-cells
+  .e-card-wrapper
+  .e-card,
+.e-kanban
+  .e-kanban-content
+  .e-content-row
+  .e-content-cells
+  .e-card-container
+  .e-card {
+  line-height: 0;
+  min-height: 0;
+  border-radius: 5px;
+}
+
+.e-kanban
+  .e-kanban-content
+  .e-content-row
+  .e-content-cells
+  .e-card-wrapper
+  .e-card
+  .e-card-content,
+.e-kanban
+  .e-kanban-content
+  .e-content-row
+  .e-content-cells
+  .e-card-container
+  .e-card
+  .e-card-content {
+  line-height: normal;
+  padding: 4px 6px;
+}
+
+// .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card .e-card-content,
+// .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-container .e-card .e-card-content {
+//   font-size: 13px;
+//   line-height: 12px;
+//   padding: 2px 2px;
+
+// }
+
+// .e-kanban .e-kanban-table {
+//   border: 0;
+//   border-collapse: separate;
+//    border-spacing: 0;
+//   table-layout: fixed;
+//   width: 100%;
+// }
