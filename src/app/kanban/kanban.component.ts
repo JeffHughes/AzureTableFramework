@@ -145,6 +145,8 @@ export class KanbanComponent implements OnInit {
     this.data.forEach((d) => {
       d.Promote ??= 0;
       d.Flag ??= 0;
+      d.Role ??= 'NA';
+      d.Level ??= 'NA';
 
       if (isNaN(d.RankId)) {
         d.RankId = 0;
@@ -205,7 +207,6 @@ export class KanbanComponent implements OnInit {
       } catch (err) {
         console.error(err);
       }
-
     }, 100);
 
     //  console.log(this.data);
@@ -238,13 +239,17 @@ export class KanbanComponent implements OnInit {
     const employees = [];
     let OverAllRankCounter = 1;
     keys.forEach((k) => {
-      employeeAreas[k].sort((a, b) => (a.RankId > b.RankId ? 1 : -1));
-      let counter = 1;
-      employeeAreas[k].forEach((e) => {
-        e.RankId = counter++;
-        e.OverAllRank = OverAllRankCounter++;
-        employees.push(this.sortKeys(e));
-      });
+      if (employeeAreas[k] && employeeAreas[k].length > 0) {
+        employeeAreas[k] = employeeAreas[k].filter(Boolean);
+
+        employeeAreas[k].sort((a, b) => (a.RankId > b.RankId ? 1 : -1));
+        let counter = 1;
+        employeeAreas[k].forEach((e) => {
+          e.RankId = counter++;
+          e.OverAllRank = OverAllRankCounter++;
+          employees.push(this.sortKeys(e));
+        });
+      }
     });
     return employees;
   }
