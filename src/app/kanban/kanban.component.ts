@@ -55,7 +55,7 @@ export class KanbanComponent implements OnInit {
 
   actionCount = 0;
   dataChanged = true;
-  sub() {
+  sub(): void {
     this.employeeFBDoc = this.db
       .collection('employees')
       .doc('G4ESm6jZpjhkJ0Hc0WnU');
@@ -112,7 +112,7 @@ export class KanbanComponent implements OnInit {
     // console.log(this.data);
   }
 
-  addCard() {
+  addCard(): void {
     const id = this.data.length + 1;
 
     const card = {
@@ -127,7 +127,7 @@ export class KanbanComponent implements OnInit {
     this.kb.openDialog('Edit', card);
   }
 
-  getClass(data) {
+  getClass(data): string {
     let classes = 'e-card-content ';
 
     if (data.Flag) {
@@ -137,7 +137,7 @@ export class KanbanComponent implements OnInit {
     return classes;
   }
 
-  saveBoard() {
+  saveBoard(): void {
     console.log('saved');
 
     // let counter = {};
@@ -183,7 +183,7 @@ export class KanbanComponent implements OnInit {
     this.reset();
   }
 
-  getTotal(text) {
+  getTotal(text): string {
     const area = this.data.filter((f) => f.Area === text);
 
     return (
@@ -225,7 +225,7 @@ export class KanbanComponent implements OnInit {
     // console.log({ employees });
   }
 
-  private SortEmployees(source) {
+  private SortEmployees(source): any[] {
     const employeeAreas = {};
     source.forEach((employee) => {
       if (!employeeAreas[employee.Area]) {
@@ -249,6 +249,8 @@ export class KanbanComponent implements OnInit {
           e.OverAllRank = OverAllRankCounter++;
           employees.push(this.sortKeys(e));
         });
+      } else {
+        console.log('no employees for ' + k);
       }
     });
     return employees;
@@ -269,7 +271,7 @@ export class KanbanComponent implements OnInit {
     };
   }
 
-  reset() {
+  reset(): void {
     this.kb.dataSource = this.lastSavedData;
     try {
       this.spreadsheet ??= {};
@@ -282,7 +284,7 @@ export class KanbanComponent implements OnInit {
     this.dataChanged = true;
   }
 
-  beforeSave(args) {
+  beforeSave(args): void {
     args.isFullPost = false;
     args.needBlobData = true;
 
@@ -291,13 +293,13 @@ export class KanbanComponent implements OnInit {
     console.log(this.spreadsheet);
   }
 
-  saveComplete(args) {
+  saveComplete(args): void {
     console.log(args);
 
     alert("haven't implemented save yet - copy paste to excel");
   }
 
-  dataBound(args: any) {
+  dataBound(args: any): void {
     // console.log({ args });
     // console.log( this.spreadsheet   );
     // console.log( this.spreadsheet.sheets    );

@@ -13,7 +13,6 @@ import { LoginComponent } from './login/login.component';
 import { SpreadsheetAllModule } from '@syncfusion/ej2-angular-spreadsheet';
 
 const firebaseConfig = {
-
   apiKey: 'AIzaSyDcxvR57JigS-jaP8ssmE0hnp2hyHFKNAQ',
   authDomain: 'tsemployeerank.firebaseapp.com',
   projectId: 'tsemployeerank',
