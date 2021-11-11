@@ -41,85 +41,157 @@
     </ng-container>
   </div>
 
-  <ejs-kanban
-    #kb
-    keyField="Area"
-    [dataSource]="data"
-    [cardSettings]="cardSettings"
-    [dialogSettings]="dialogSettings"
-    [sortSettings]="sortSettings"
-    (actionComplete)="actionComplete()"
-    style="margin-top: 30px"
-  >
-    <e-columns>
-      <e-column headerText="Always" keyField="Always">
-        <ng-template #template let-data>
-          <div style="width: 100%; display: flex; justify-content: center">
-            <div class="header-text">{{ data.headerText }} Exceeds</div>
-            <div class="header-text">
-              &nbsp; {{ getTotal(data.headerText) }}
-            </div>
-          </div>
-        </ng-template>
-      </e-column>
-      <e-column headerText="Often" keyField="Often">
-        <ng-template #template let-data>
-          <div style="width: 100%; display: flex; justify-content: center">
-            <div class="header-text">{{ data.headerText }} Exceeds</div>
-            <div class="header-text">
-              &nbsp; {{ getTotal(data.headerText) }}
-            </div>
-          </div>
-        </ng-template>
-      </e-column>
-      <e-column headerText="Meets" keyField="Meets"
-        ><ng-template #template let-data>
-          <div style="width: 100%; display: flex; justify-content: center">
-            <div class="header-text">{{ data.headerText }}</div>
-            <div class="header-text">
-              &nbsp; {{ getTotal(data.headerText) }}
-            </div>
-          </div>
-        </ng-template></e-column
-      >
-      <e-column headerText="Below" keyField="Below"
-        ><ng-template #template let-data>
-          <div style="width: 100%; display: flex; justify-content: center">
-            <div class="header-text">{{ data.headerText }}</div>
-            <div class="header-text">
-              &nbsp; {{ getTotal(data.headerText) }}
-            </div>
-          </div>
-        </ng-template></e-column
-      >
-    </e-columns>
-    <ng-template #cardSettingsTemplate let-data>
-      <div [class]="getClass(data)">
-        <div style="display: flex; width: 100%; justify-content: space-between">
-          <div>
-            {{ data.RankId }}.
-            {{ data.Name }}
-            {{ data.Role }}-{{ data.Level }}
-          </div>
+  <div style="position: relative">
+    <highcharts-chart
+      [Highcharts]="highcharts"
+      [options]="chartOptions"
+      style="
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 50px;
+        z-index: 5;
+        background-color: transparent;
+        user-select: none;
+      "
+      (click)="showCurve = false"
+      *ngIf="showCurve"
+      [(update)]="updateFlag"
+    >
+    </highcharts-chart>
 
-          <div>
-            <ng-container *ngIf="data.Promote">
-              <img src="../../assets/promote.png" height="16" />
-            </ng-container>
-          </div>
-        </div>
-        <div
-          style="background-color: whitesmoke; width: 100%"
-          *ngIf="data.Notes"
+    <ejs-kanban
+      #kb
+      keyField="Area"
+      [dataSource]="data"
+      [cardSettings]="cardSettings"
+      [dialogSettings]="dialogSettings"
+      [sortSettings]="sortSettings"
+      (actionComplete)="actionComplete()"
+      style="margin-top: 30px"
+    >
+      <e-columns>
+        <e-column headerText="Always" keyField="Always">
+          <ng-template #template let-data>
+            <div style="width: 100%; display: flex; justify-content: center">
+              <div
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  align-items: flex-end;
+                "
+              >
+                <div class="header-text">
+                  {{ getTotal(data.headerText) }}
+                </div>
+                <div *ngIf="showCurve" class="header-text-ideal">
+                  {{ getIdeal(0) }}
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </e-column>
+        <e-column headerText="Often" keyField="Often">
+          <ng-template #template let-data>
+            <div style="width: 100%; display: flex; justify-content: center">
+              <div
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  align-items: flex-end;
+                "
+              >
+                <div class="header-text">
+                  {{ getTotal(data.headerText) }}
+                </div>
+                <div *ngIf="showCurve" class="header-text-ideal">
+                  {{ getIdeal(1) }}
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </e-column>
+        <e-column headerText="Meets" keyField="Meets"
+          ><ng-template #template let-data>
+            <div style="width: 100%; display: flex; justify-content: center">
+              <div
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  align-items: flex-end;
+                "
+              >
+                <div class="header-text">
+                  {{ getTotal(data.headerText) }}
+                </div>
+                <div *ngIf="showCurve" class="header-text-ideal">
+                  {{ getIdeal(2) }}
+                </div>
+              </div>
+            </div>
+          </ng-template></e-column
         >
-          {{ data.Notes }}
-        </div>
-      </div>
-    </ng-template>
-  </ejs-kanban>
+        <e-column headerText="Below" keyField="Below"
+          ><ng-template #template let-data>
+            <div style="width: 100%; display: flex; justify-content: center">
+              <div
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  align-items: flex-end;
+                "
+              >
+                <div class="header-text">
+                  {{ getTotal(data.headerText) }}
+                </div>
+                <div *ngIf="showCurve" class="header-text-ideal">
+                  {{ getIdeal(3) }}
+                </div>
+              </div>
+            </div>
+          </ng-template></e-column
+        >
+      </e-columns>
+      <ng-template #cardSettingsTemplate let-data>
+        <div [class]="getClass(data)">
+          <div
+            style="display: flex; width: 100%; justify-content: space-between"
+          >
+            <div>
+              {{ data.RankId }}.
+              {{ data.Name }}
+              {{ data.Role }}-{{ data.Level }}
+            </div>
 
-  <div *ngIf="!showSpreadsheet" style="margin-left: 10px">
-    <a href="#" (click)="showSpreadsheet = true">show spreadsheet</a>
+            <div>
+              <ng-container *ngIf="data.Promote">
+                <img src="../../assets/promote.png" height="16" />
+              </ng-container>
+            </div>
+          </div>
+          <div
+            style="background-color: whitesmoke; width: 100%"
+            *ngIf="data.Notes"
+          >
+            {{ data.Notes }}
+          </div>
+        </div>
+      </ng-template>
+    </ejs-kanban>
+  </div>
+
+  <div style="display: flex; width: 100%; justify-content: space-between">
+    <div *ngIf="!showSpreadsheet" style="margin-left: 10px">
+      <a href="#" (click)="showSpreadsheet = true">show spreadsheet</a>
+    </div>
+
+    <div *ngIf="!showCurve" style="margin-right: 10px">
+      <a href="#" (click)="updateChartData()">show curve</a>
+    </div>
+
+    <div *ngIf="showCurve" style="margin-right: 10px">
+      click anywhere to hide curve
+    </div>
   </div>
 
   <!--

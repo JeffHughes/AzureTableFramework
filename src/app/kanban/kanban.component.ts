@@ -7,13 +7,14 @@ import {
   SortSettingsModel,
 } from '@syncfusion/ej2-angular-kanban';
 import { User } from '../login/login.component';
+import * as Highcharts from 'highcharts';
 
 @Component({
   selector: 'app-kanban',
   templateUrl: './kanban.component.html',
   styleUrls: ['./kanban.component.scss'],
 })
-export class KanbanComponent   {
+export class KanbanComponent {
   constructor(private db: AngularFirestore) {
     this.sub();
   }
@@ -21,6 +22,75 @@ export class KanbanComponent   {
   @ViewChild('spreadsheet') spreadsheet;
 
   public data = [];
+
+  showCurve = false;
+  updateFlag = false;
+
+  highcharts = Highcharts;
+  chartOptions = {
+    title: {
+      text: '',
+      style: {
+        display: 'none',
+      },
+    },
+    subtitle: {
+      text: '',
+      style: {
+        display: 'none',
+      },
+    },
+    chart: {
+      type: 'areaspline',
+      zoomType: 'x',
+      backgroundColor: null,
+      height: '50%',
+    },
+
+    xAxis: {
+      categories: ['Always', 'Often', 'Meets', 'Below'],
+      visible: false,
+    },
+
+    yAxis: {
+      visible: false,
+      reversed: true,
+    },
+
+    tooltip: {
+      pointFormat:
+        '{series.name} {point.label} has <b>{point.y:,.1f}% </b> of employees',
+    },
+    plotOptions: {
+      area: {
+        startPoint: 'Always',
+        marker: {
+          enabled: false,
+          symbol: 'circle',
+          radius: 2,
+          states: {
+            hover: {
+              enabled: true,
+            },
+          },
+        },
+      },
+    },
+    series: [
+      {
+        name: 'Ideal',
+        data: [20, 35, 40, 5],
+      },
+      {
+        name: 'Current',
+        data: [10, 10, 10, 10],
+      },
+    ],
+    credits: {
+      enabled: false,
+    },
+    legend: { enabled: false },
+  };
 
   public sortSettings: SortSettingsModel = {
     field: 'RankId',
@@ -55,6 +125,10 @@ export class KanbanComponent   {
 
   actionCount = 0;
   dataChanged = true;
+
+  keys = ['Always', 'Often', 'Meets', 'Below'];
+
+  updateChartDataTimeout: any = null;
   sub(): void {
     this.employeeFBDoc = this.db
       .collection('employees')
@@ -160,13 +234,21 @@ export class KanbanComponent   {
     const area = this.data.filter((f) => f.Area === text);
 
     return (
+      text +
+      ' ' +
       area.length +
-      '/' +
-      this.data.length +
+      // '/' +
+      // this.data.length +
       ' (' +
       ((100 * area.length) / this.data.length).toFixed(1) +
       '%)'
     );
+  }
+
+  getIdeal(num): string {
+    const percent = this.chartOptions.series[0].data[num].toFixed(1);
+    const roundNum = Math.floor(+percent * this.data.length / 100);
+    return   roundNum + ' (' + percent + '%)';
   }
 
   actionComplete(): void {
@@ -207,7 +289,8 @@ export class KanbanComponent   {
 
     const employees = [];
     let OverAllRankCounter = 1;
-    ['Always', 'Often', 'Meets', 'Below'].forEach((k) => {
+
+    this.keys.forEach((k) => {
       if (employeeAreas[k] && employeeAreas[k].length > 0) {
         employeeAreas[k].sort((a, b) => (a.RankId > b.RankId ? 1 : -1));
         let counter = 1;
@@ -216,11 +299,38 @@ export class KanbanComponent   {
           e.OverAllRank = OverAllRankCounter++;
           employees.push(this.sortKeys(e));
         });
-      } else {
-        // console.log('no employees for ' + k);
       }
     });
     return employees;
+  }
+
+  updateChartData(): void {
+    if (this.data.length > 4) {
+      clearTimeout(this.updateChartDataTimeout);
+
+      this.updateChartDataTimeout = setTimeout(() => {
+        const seriesData = [];
+
+        this.keys.forEach((k) => {
+          const areaEmployees = this.data.filter((f) => f.Area === k);
+
+          const percentageOfTotal =
+            (100 * areaEmployees.length) / this.data.length;
+          if (percentageOfTotal >= 0 && percentageOfTotal <= 100) {
+            seriesData.push(percentageOfTotal);
+          } else {
+            seriesData.push(0);
+          }
+        });
+
+        if (seriesData.length === 4 && seriesData.reduce((a, b) => a + b) > 1) {
+          this.chartOptions.series[1].data = seriesData;
+        }
+
+        this.updateFlag = true;
+        this.showCurve = true;
+      }, 100);
+    }
   }
 
   sortKeys(item): object {
@@ -242,13 +352,15 @@ export class KanbanComponent   {
     this.kb.dataSource = this.lastSavedData;
     try {
       this.spreadsheet ??= {};
-      this.spreadsheet['dataSource'] = this.lastSavedData;
+      this.spreadsheet.dataSource = this.lastSavedData;
     } catch (err) {
       console.error(err);
     }
     this.data = JSON.parse(JSON.stringify(this.lastSavedData));
     this.actionCount = 0;
     this.dataChanged = true;
+
+    this.showCurve = false;
   }
 
   beforeSave(args): void {

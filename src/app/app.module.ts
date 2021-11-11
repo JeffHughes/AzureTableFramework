@@ -11,6 +11,8 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { LoginComponent } from './login/login.component';
 import { SpreadsheetAllModule } from '@syncfusion/ej2-angular-spreadsheet';
+import { ChartComponent } from './chart/chart.component';
+import {   HighchartsChartModule } from 'highcharts-angular';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDcxvR57JigS-jaP8ssmE0hnp2hyHFKNAQ',
@@ -22,7 +24,7 @@ const firebaseConfig = {
 };
 
 @NgModule({
-  declarations: [AppComponent, KanbanComponent, LoginComponent],
+  declarations: [AppComponent, KanbanComponent, LoginComponent, ChartComponent],
   imports: [
     BrowserModule,
     KanbanModule,
@@ -32,6 +34,7 @@ const firebaseConfig = {
     AngularFirestoreModule, // firestore
     AngularFireAuthModule, // auth
     AngularFireStorageModule, // storage
+    HighchartsChartModule
   ],
   providers: [],
   bootstrap: [AppComponent],
