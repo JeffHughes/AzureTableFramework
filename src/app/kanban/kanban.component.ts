@@ -108,6 +108,8 @@ export class KanbanComponent {
       { key: 'Notes', type: 'TextArea' },
       { key: 'Promote', type: 'Numeric' },
       { key: 'Flag', type: 'Numeric' },
+      { key: 'HiPer', type: 'Numeric' },
+      { key: 'HiPo', type: 'Numeric' },
     ],
   };
 
@@ -188,6 +190,8 @@ export class KanbanComponent {
       Notes: '',
       Promote: 0,
       Flag: 0,
+      HiPer: 0,
+      HiPo: 0,
     };
 
     this.kb.addCard(card);
@@ -212,6 +216,8 @@ export class KanbanComponent {
       d.Flag ??= 0;
       d.Role ??= 'NA';
       d.Level ??= 'NA';
+      d.HiPer ??= 0;
+      d.HiPo ??= 0;
 
       if (isNaN(d.RankId)) {
         d.RankId = this.data.length + 1;
@@ -345,6 +351,8 @@ export class KanbanComponent {
       Flag: item.Flag,
       Notes: item.Notes,
       Id: item.Id,
+      HiPer: item.HiPer,
+      HiPo: item.HiPo
     };
   }
 
