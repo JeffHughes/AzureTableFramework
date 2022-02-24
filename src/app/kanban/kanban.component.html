@@ -1,7 +1,5 @@
 <ng-container *ngIf="viewable">
-  <div
-    *ngIf="isAdmin"
-    style="
+  <div *ngIf="isAdmin" style="
       position: fixed;
       top: -2.5px;
       left: 0;
@@ -11,8 +9,7 @@
 
       color: white;
       padding: 5px;
-    "
-  >
+    ">
     <a href="#" (click)="addCard()" style="color: white; text-decoration: none">
       <img src="../../assets/add-15x15.png" style="height: 15px" />
       add employee
@@ -21,15 +18,9 @@
     &nbsp; &nbsp;
 
     <ng-container *ngIf="actionCount && actionCount > 0">
-      <a
-        href="#"
-        (click)="saveBoard()"
-        style="color: white; text-decoration: none"
-      >
+      <a href="#" (click)="saveBoard()" style="color: white; text-decoration: none">
         <img src="../../assets/save-15x15.png" style="height: 15px" />
-        publish {{ actionCount }} action<ng-container *ngIf="actionCount != 1"
-          >s</ng-container
-        >
+        publish {{ actionCount }} action<ng-container *ngIf="actionCount != 1">s</ng-container>
       </a>
 
       &nbsp; &nbsp;
@@ -42,10 +33,7 @@
   </div>
 
   <div style="position: relative">
-    <highcharts-chart
-      [Highcharts]="highcharts"
-      [options]="chartOptions"
-      style="
+    <highcharts-chart [Highcharts]="highcharts" [options]="chartOptions" style="
         width: 100%;
         height: 100%;
         position: absolute;
@@ -53,34 +41,20 @@
         z-index: 5;
         background-color: transparent;
         user-select: none;
-      "
-      (click)="showCurve = false"
-      *ngIf="showCurve"
-      [(update)]="updateFlag"
-    >
+      " (click)="showCurve = false" *ngIf="showCurve" [(update)]="updateFlag">
     </highcharts-chart>
 
-    <ejs-kanban
-      #kb
-      keyField="Area"
-      [dataSource]="data"
-      [cardSettings]="cardSettings"
-      [dialogSettings]="dialogSettings"
-      [sortSettings]="sortSettings"
-      (actionComplete)="actionComplete()"
-      style="margin-top: 30px"
-    >
+    <ejs-kanban #kb keyField="Area" [dataSource]="data" [cardSettings]="cardSettings" [dialogSettings]="dialogSettings"
+      [sortSettings]="sortSettings" (actionComplete)="actionComplete()" style="margin-top: 30px">
       <e-columns>
         <e-column headerText="Always" keyField="Always">
           <ng-template #template let-data>
             <div style="width: 100%; display: flex; justify-content: center">
-              <div
-                style="
+              <div style="
                   display: flex;
                   flex-direction: column;
                   align-items: flex-end;
-                "
-              >
+                ">
                 <div class="header-text">
                   {{ getTotal(data.headerText) }}
                 </div>
@@ -94,13 +68,11 @@
         <e-column headerText="Often" keyField="Often">
           <ng-template #template let-data>
             <div style="width: 100%; display: flex; justify-content: center">
-              <div
-                style="
+              <div style="
                   display: flex;
                   flex-direction: column;
                   align-items: flex-end;
-                "
-              >
+                ">
                 <div class="header-text">
                   {{ getTotal(data.headerText) }}
                 </div>
@@ -111,16 +83,14 @@
             </div>
           </ng-template>
         </e-column>
-        <e-column headerText="Meets" keyField="Meets"
-          ><ng-template #template let-data>
+        <e-column headerText="Meets" keyField="Meets">
+          <ng-template #template let-data>
             <div style="width: 100%; display: flex; justify-content: center">
-              <div
-                style="
+              <div style="
                   display: flex;
                   flex-direction: column;
                   align-items: flex-end;
-                "
-              >
+                ">
                 <div class="header-text">
                   {{ getTotal(data.headerText) }}
                 </div>
@@ -129,18 +99,16 @@
                 </div>
               </div>
             </div>
-          </ng-template></e-column
-        >
-        <e-column headerText="Below" keyField="Below"
-          ><ng-template #template let-data>
+          </ng-template>
+        </e-column>
+        <e-column headerText="Below" keyField="Below">
+          <ng-template #template let-data>
             <div style="width: 100%; display: flex; justify-content: center">
-              <div
-                style="
+              <div style="
                   display: flex;
                   flex-direction: column;
                   align-items: flex-end;
-                "
-              >
+                ">
                 <div class="header-text">
                   {{ getTotal(data.headerText) }}
                 </div>
@@ -149,30 +117,29 @@
                 </div>
               </div>
             </div>
-          </ng-template></e-column
-        >
+          </ng-template>
+        </e-column>
       </e-columns>
       <ng-template #cardSettingsTemplate let-data>
         <div [class]="getClass(data)">
-          <div
-            style="display: flex; width: 100%; justify-content: space-between"
-          >
+          <div style="display: flex; width: 100%; justify-content: space-between">
             <div>
               {{ data.RankId }}.
               {{ data.Name }}
               {{ data.Role }}-{{ data.Level }}
             </div>
 
+
             <div>
-              <ng-container *ngIf="data.Promote">
-                <img src="../../assets/promote.png" height="16" />
-              </ng-container>
+              <img *ngIf="data.HiPer" src="../../assets/HiPer-168818-200.png" height="16" alt="High Performer" />
+               <sup *ngIf="data.HiPer > 1">{{data.HiPer}}</sup>
+              <img *ngIf="data.HiPo" src="../../assets/HiPo.png" height="16" alt="High Potential" />
+              <sup *ngIf="data.HiPo > 1">{{data.HiPo}}</sup>
+              <img *ngIf="data.Promote" src="../../assets/promote.png" height="16" alt="Promotion Warranted" />
+              <sup *ngIf="data.Promote > 1">{{data.Promote}}</sup>
             </div>
           </div>
-          <div
-            style="background-color: whitesmoke; width: 100%"
-            *ngIf="data.Notes"
-          >
+          <div style="background-color: whitesmoke; width: 100%" *ngIf="data.Notes">
             {{ data.Notes }}
           </div>
         </div>
@@ -201,24 +168,19 @@
       (saveComplete)="saveComplete($event)"
     -->
   <div *ngIf="showSpreadsheet" style="height: 95vh">
-    <ejs-spreadsheet
-      #spreadsheet
-      [showFile]="false"
-      (dataBound)="dataBound($event)"
-    >
+    <ejs-spreadsheet #spreadsheet [showFile]="false" (dataBound)="dataBound($event)">
       <e-sheets>
-        <e-sheet
-          [allowSave]="true"
-          [protectSettings]="{
+        <e-sheet [allowSave]="true" [protectSettings]="{
             selectCells: true,
             formatCells: false,
             formatRows: false,
             formatColumns: false,
             insertLink: false
-          }"
-        >
-          <e-ranges> <e-range [dataSource]="data"></e-range></e-ranges
-          ><e-columns>
+          }">
+          <e-ranges>
+            <e-range [dataSource]="data"></e-range>
+          </e-ranges>
+          <e-columns>
             <e-column [width]="90"></e-column>
             <e-column [width]="170"></e-column>
             <e-column [width]="78"></e-column>
@@ -228,8 +190,11 @@
             <e-column [width]="60"></e-column>
             <e-column [width]="40"></e-column>
             <e-column [width]="150"></e-column>
-            <e-column [width]="1"></e-column> </e-columns></e-sheet></e-sheets
-    ></ejs-spreadsheet>
+            <e-column [width]="1"></e-column>
+          </e-columns>
+        </e-sheet>
+      </e-sheets>
+    </ejs-spreadsheet>
   </div>
   <br /><br />
   <!-- <div
